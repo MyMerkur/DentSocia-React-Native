@@ -1,4 +1,4 @@
-# NEXORA
+# DENTSOCIA
 
 Diş hekimliği ve sağlık sektörü profesyonelleri için kariyer, vaka paylaşımı ve topluluk platformu.
 
@@ -13,12 +13,12 @@ Strateji mobile-first: önce backend ve mobil uygulama birlikte ilerliyor, web a
 - Backend klasik **MVC + Service + Repository** katmanlarıyla kurgulandı; controller'lar ince tutuluyor, iş mantığı service katmanında, veritabanı sorguları repository katmanında.
 - Backend, mobil ve (ileride) web arasında paylaşılan tipler/validasyon/sabitler için ayrı paketler var, böylece aynı iş kuralı iki yerde ayrı ayrı yazılmıyor.
 
-Detaylı faz planı, mimari kararlar ve gerekçeleri için: [docs/PROJECT_PLAN.md](docs/PROJECT_PLAN.md). Yeni bir çalışma oturumuna başlarken önce o dosyaya, sonra GitHub Projects board'una ("Nexora Roadmap") bakmak en doğrusu.
+Detaylı faz planı, mimari kararlar ve gerekçeleri için: [docs/PROJECT_PLAN.md](docs/PROJECT_PLAN.md). Yeni bir çalışma oturumuna başlarken önce o dosyaya, sonra GitHub Projects board'una ("DentSocia Roadmap") bakmak en doğrusu.
 
 ## Klasör yapısı
 
 ```
-nexora/
+dentsocia/
 ├── apps/
 │   ├── server/      # Express + TypeScript backend — auth, MVC/Service/Repository
 │   ├── mobile/       # React Native (Bare, TypeScript) — Faz 0-5 kapsamındaki tüm ekranlar aktif
@@ -69,20 +69,20 @@ Ortam değişkenleri için `.env.example` dosyasını referans alıp kendi `.env
 Backend'i ayağa kaldırmak için:
 
 ```bash
-pnpm --filter @nexora/server dev      # http://localhost:4000
-pnpm --filter @nexora/server test     # mongodb-memory-server ile izole testler
-pnpm --filter @nexora/server typecheck
-pnpm --filter @nexora/server lint
+pnpm --filter @dentsocia/server dev      # http://localhost:4000
+pnpm --filter @dentsocia/server test     # mongodb-memory-server ile izole testler
+pnpm --filter @dentsocia/server typecheck
+pnpm --filter @dentsocia/server lint
 ```
 
 Mobil tarafta Bare React Native kullanıldığı için Expo Go ile anlık önizleme yok — iOS için Xcode + CocoaPods, Android için Android Studio + JDK kurulu olması gerekiyor.
 
 ```bash
-pnpm --filter @nexora/mobile ios       # Xcode + CocoaPods kurulu olmalı
-pnpm --filter @nexora/mobile android   # Android Studio + JDK kurulu olmalı
-pnpm --filter @nexora/mobile test
-pnpm --filter @nexora/mobile typecheck
-pnpm --filter @nexora/mobile lint
+pnpm --filter @dentsocia/mobile ios       # Xcode + CocoaPods kurulu olmalı
+pnpm --filter @dentsocia/mobile android   # Android Studio + JDK kurulu olmalı
+pnpm --filter @dentsocia/mobile test
+pnpm --filter @dentsocia/mobile typecheck
+pnpm --filter @dentsocia/mobile lint
 ```
 
 ## Branch stratejisi
@@ -94,6 +94,6 @@ pnpm --filter @nexora/mobile lint
 
 ## Durum
 
-**Faz 0–5 tamamlandı.** Faz 0 (temel altyapı) VPS/staging kurulumu hariç bitti — o adım bilinçli olarak tüm fazların sonuna ertelendi. Faz 1 (MVP çekirdek döngü), Faz 2 (etkileşim/güven katmanı), Faz 3 (monetizasyon — abonelik altyapısı, eğitmen ekonomisi, sertifika sistemi, B2B ilan/premium), Faz 4 (topluluk/kurumsal katman — Nexora Hubs, dernek sayfaları, dernek aidat tahsilatı, etkinlik biletleme, B2B aday arama) ve Faz 5 (mobil UX/UI tasarım — paylaşılan bileşen kütüphanesi, dark/light tema, sidebar navigasyonu, auth/onboarding + KYC akışı, 41 ekranın tamamının yeni tasarım sistemine taşınması) tamamen bitti ve kapatıldı.
+**Faz 0–5 tamamlandı.** Faz 0 (temel altyapı) VPS/staging kurulumu hariç bitti — o adım bilinçli olarak tüm fazların sonuna ertelendi. Faz 1 (MVP çekirdek döngü), Faz 2 (etkileşim/güven katmanı), Faz 3 (monetizasyon — abonelik altyapısı, eğitmen ekonomisi, sertifika sistemi, B2B ilan/premium), Faz 4 (topluluk/kurumsal katman — DentSocia Hubs, dernek sayfaları, dernek aidat tahsilatı, etkinlik biletleme, B2B aday arama) ve Faz 5 (mobil UX/UI tasarım — paylaşılan bileşen kütüphanesi, dark/light tema, sidebar navigasyonu, auth/onboarding + KYC akışı, 41 ekranın tamamının yeni tasarım sistemine taşınması) tamamen bitti ve kapatıldı.
 
-Sırada **Faz 6 (mobil lansman hazırlığı)** var. İlerlemeyi [GitHub Projects — Nexora Roadmap](https://github.com/users/MyMerkur/projects/2) board'undan takip edebilirsin; her faz ayrı bir milestone olarak tanımlı, kapanan tüm issue'lar ilgili PR'a referans veriyor.
+Sırada **Faz 6 (mobil lansman hazırlığı)** var. İlerlemeyi [GitHub Projects — DentSocia Roadmap](https://github.com/users/MyMerkur/projects/2) board'undan takip edebilirsin; her faz ayrı bir milestone olarak tanımlı, kapanan tüm issue'lar ilgili PR'a referans veriyor.

@@ -1,4 +1,4 @@
-# NEXORA — Proje Uygulama Planı (Claude Code için)
+# DENTSOCIA — Proje Uygulama Planı (Claude Code için)
 
 **Amaç:** Bu doküman, PRD (v1.1) ve Teknik Mimari belgesindeki (v1.0) kararları; senin onayladığın altyapı tercihleriyle (Atlas, sıfırdan GitHub, Bare React Native, domain yok) birleştirip, Claude Code'un adım adım takip edebileceği yürütme planına çeviriyor. Mobile-first stratejisiyle **önce backend + mobil uygulama**, web uygulaması ayrı bir faz olarak sona bırakıldı.
 
@@ -31,7 +31,7 @@ Bunlar planı bloke etmiyor ama Faz 0'ın ilk günlerinde karar verilmeli:
 Web şimdilik yok ama paylaşılan paketler ileride web'in de aynı iş mantığını kullanabilmesi için baştan bu şekilde kurulacak:
 
 ```
-nexora/
+dentsocia/
 ├── apps/
 │   ├── backend/          # Node.js + Express (TypeScript, MVC)
 │   └── mobile/            # React Native (Bare, TypeScript)
@@ -61,7 +61,7 @@ nexora/
 
 ### 3.1 Organizasyon ve repo
 - Yeni bir GitHub **organization** oluştur (kişisel hesap yerine — ileride ekip/collaborator eklemek kolaylaşır).
-- İçinde **`nexora`** adında **private** repo aç.
+- İçinde **`dentsocia`** adında **private** repo aç.
 - `.gitignore` (node, RN, macOS, .env dosyaları), `LICENSE` (private proje için opsiyonel), `README.md` iskeleti.
 
 ### 3.2 Branch stratejisi
@@ -79,7 +79,7 @@ Kurallar: `main` ve `develop` doğrudan push'a kapalı (branch protection), her 
 - Issue şablonları: `bug_report.md`, `feature_request.md`.
 
 ### 3.4 GitHub Projects (board)
-- Tek bir **"Nexora Roadmap"** projesi (Projects v2, Board görünümü).
+- Tek bir **"DentSocia Roadmap"** projesi (Projects v2, Board görünümü).
 - Sütunlar: `Backlog` → `Bu Sprint` → `Devam Ediyor` → `Review/Test` → `Done`.
 - Her **Faz** (Faz 0, Faz 1, …) bir **Milestone** olarak repo'da tanımlanır; her görev/issue ilgili milestone'a bağlanır.
 - Her Faz'ın sonunda milestone kapatılır, board'da "Done" biriken kartlar arşivlenir — bu senin ilerlemeyi tek bakışta görmeni sağlar.
@@ -98,9 +98,9 @@ Not: Mobil tarafta Bare RN olduğu için CI'da native build (özellikle iOS/macO
 
 | Ortam | Backend | DB | Amaç |
 |---|---|---|---|
-| **Development** | Yerel makine (localhost) | Atlas `nexora-dev` cluster (ücretsiz M0 tier yeterli) | Günlük geliştirme |
-| **Staging** | VPS, PM2 process `nexora-api-staging`, ayrı port (örn. 4001) | Atlas `nexora-staging` cluster/DB | Faz sonu demo, QA |
-| **Production** | VPS, PM2 process `nexora-api-prod`, port 4000 | Atlas `nexora-prod` cluster | Canlı kullanıcılar |
+| **Development** | Yerel makine (localhost) | Atlas `dentsocia-dev` cluster (ücretsiz M0 tier yeterli) | Günlük geliştirme |
+| **Staging** | VPS, PM2 process `dentsocia-api-staging`, ayrı port (örn. 4001) | Atlas `dentsocia-staging` cluster/DB | Faz sonu demo, QA |
+| **Production** | VPS, PM2 process `dentsocia-api-prod`, port 4000 | Atlas `dentsocia-prod` cluster | Canlı kullanıcılar |
 
 GitHub Secrets (repo/organization settings): `VPS_HOST`, `VPS_SSH_KEY`, `ATLAS_URI_STAGING`, `ATLAS_URI_PROD`, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, `R2_ACCESS_KEY` (veya S3), `SENTRY_DSN`. `.env.example` dosyası repo'da tutulur, gerçek `.env` dosyaları asla commit edilmez.
 
@@ -187,11 +187,11 @@ Detaylı alan bazlı şema Faz 1 başında Mongoose model dosyaları yazılırke
 **Faz 0'da VPS'e eklenecekler:**
 1. **Redis** kurulumu (BullMQ kuyruk sistemi ve cache için) — `apt install redis-server`, sadece localhost'a bağlı, şifreli.
 2. **Deploy kullanıcısı** ve GitHub Actions için ayrı bir **SSH deploy key** (root ile deploy yapılmayacak).
-3. Klasör yapısı: `/var/www/nexora/backend` (git ile clone edilecek), `/var/www/nexora/shared` (paylaşılan `.env` dosyaları, log klasörleri).
-4. **PM2 ecosystem dosyası** (`infra/pm2/ecosystem.config.js`) — `nexora-api-staging` (port 4001) ve `nexora-api-prod` (port 4000) adında iki ayrı process.
+3. Klasör yapısı: `/var/www/dentsocia/backend` (git ile clone edilecek), `/var/www/dentsocia/shared` (paylaşılan `.env` dosyaları, log klasörleri).
+4. **PM2 ecosystem dosyası** (`infra/pm2/ecosystem.config.js`) — `dentsocia-api-staging` (port 4001) ve `dentsocia-api-prod` (port 4000) adında iki ayrı process.
 5. **pm2-logrotate** modülü (log dosyalarının şişmesini engellemek için).
 6. **Firewall (ufw):** sadece 22 (SSH), 80/443 (domain gelince), backend portları sadece localhost/nginx üzerinden erişilebilir olacak şekilde kapatılacak.
-7. **Domain geldiğinde:** Nginx reverse proxy (`api.nexora.com` → localhost:4000/4001) + Certbot (Let's Encrypt) ile ücretsiz SSL. Bu adım domain alınana kadar bekletiliyor; o zamana kadar geliştirme/test IP:port üzerinden yürütülecek.
+7. **Domain geldiğinde:** Nginx reverse proxy (`api.dentsocia.com` → localhost:4000/4001) + Certbot (Let's Encrypt) ile ücretsiz SSL. Bu adım domain alınana kadar bekletiliyor; o zamana kadar geliştirme/test IP:port üzerinden yürütülecek.
 
 ---
 
@@ -231,7 +231,7 @@ Orijinal teknik dokümandaki 6 fazlık plan, web'in sona alınmasıyla ve Faz 4 
 - → PRD Aşamaları: 6, 8, 15, 16 (kısmi)
 
 ### Faz 4 — Topluluk ve Kurumsal Katman *(6-8 hafta)*
-- Nexora Hubs (ücretli/ücretsiz mikro-topluluklar)
+- DentSocia Hubs (ücretli/ücretsiz mikro-topluluklar)
 - Dernek sayfaları, aidiyet etiketleri, push duyuru, dijital oylama
 - Dernek fintech entegrasyonu (otomatik aidat tahsilatı)
 - Etkinlik/kongre biletleme modülü
@@ -294,7 +294,7 @@ Platform kimlik/diploma/vergi levhası gibi hassas belgeler işlediği için:
 
 ## 14. İlk Adımlar — Hemen Yapılacaklar Checklist
 
-1. [ ] GitHub organization + `nexora` private repo oluştur
+1. [ ] GitHub organization + `dentsocia` private repo oluştur
 2. [ ] MongoDB Atlas hesabı + 3 cluster/DB (dev/staging/prod, M0 ücretsiz tier ile başlanabilir)
 3. [ ] Depolama kararı: R2 mi S3 mi — hesap aç
 4. [ ] VPS'e SSH ile bağlanıp Redis kur, deploy kullanıcısı + SSH key oluştur

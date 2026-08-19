@@ -5,28 +5,28 @@ Bare React Native (TypeScript) mobil uygulaması. Expo kullanılmıyor — nativ
 ## Şu an neler var
 
 - Kimlik doğrulama olmadan önce `LoginScreen` gösteriliyor; başarılı giriş/kayıt sonrası 5'li tab navigasyona (`Feed`, `Hubs`, `Create`, `Career`, `Profile`) geçiliyor — hepsi henüz placeholder.
-- `@nexora/api-client` üzerinden backend'in `/api/v1/auth/*` uçlarına gerçek istek atılıyor, oturum `zustand` (`useAuthStore`) ile tutuluyor.
-- `@nexora/ui-tokens` paketindeki Dark & Gold tema (koyu karbon zemin, elektrik mavisi + şampanya altını vurgu) kullanılıyor.
+- `@dentsocia/api-client` üzerinden backend'in `/api/v1/auth/*` uçlarına gerçek istek atılıyor, oturum `zustand` (`useAuthStore`) ile tutuluyor.
+- `@dentsocia/ui-tokens` paketindeki Dark & Gold tema (koyu karbon zemin, elektrik mavisi + şampanya altını vurgu) kullanılıyor.
 
 ## Çalıştırma
 
-Önce kök dizinde `pnpm install` yapılmış ve backend ayakta olmalı (`pnpm --filter @nexora/server dev`, varsayılan `http://localhost:4000`).
+Önce kök dizinde `pnpm install` yapılmış ve backend ayakta olmalı (`pnpm --filter @dentsocia/server dev`, varsayılan `http://localhost:4000`).
 
 ```bash
 # iOS (Xcode + CocoaPods gerekir)
 cd ios && bundle exec pod install && cd ..
-pnpm --filter @nexora/mobile ios
+pnpm --filter @dentsocia/mobile ios
 
 # Android (Android Studio + SDK gerekir — bu iskelette henüz kurulmadı)
-pnpm --filter @nexora/mobile android
+pnpm --filter @dentsocia/mobile android
 ```
 
 Diğer komutlar:
 
 ```bash
-pnpm --filter @nexora/mobile typecheck
-pnpm --filter @nexora/mobile lint
-pnpm --filter @nexora/mobile test
+pnpm --filter @dentsocia/mobile typecheck
+pnpm --filter @dentsocia/mobile lint
+pnpm --filter @dentsocia/mobile test
 ```
 
 ## Bilinen sınırlamalar
