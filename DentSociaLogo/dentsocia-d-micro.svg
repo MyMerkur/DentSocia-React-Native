@@ -1,0 +1,5 @@
+<!-- 16 piksel ve altı için: boşluk 40° yerine 52°, kapanmasın diye. -->
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="dentsocia">
+  <path d="M23.899 22.297 A15 15 0 1 1 15.446 32.371" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+  <path d="M48 13V51" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+</svg>
