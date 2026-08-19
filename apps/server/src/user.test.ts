@@ -8,6 +8,7 @@ jest.mock("@aws-sdk/client-s3", () => ({
   S3Client: jest.fn().mockImplementation(() => ({ send: mockSend })),
   PutObjectCommand: jest.fn().mockImplementation((input) => ({ __type: "put", input })),
   GetObjectCommand: jest.fn().mockImplementation((input) => ({ __type: "get", input })),
+  DeleteObjectCommand: jest.fn().mockImplementation((input) => ({ __type: "delete", input })),
 }));
 
 const mockGetSignedUrl = jest.fn();
@@ -266,5 +267,44 @@ describe("User profile endpoints", () => {
       .send({ orgUserId: null });
     expect(leaveRes.status).toBe(200);
     expect(leaveRes.body.showcase.affiliatedOrg).toBeNull();
+  });
+});
+
+describe("DELETE /users/me", () => {
+  it("rejects requests without an access token", async () => {
+    const response = await request(app).delete("/api/v1/users/me");
+    expect(response.status).toBe(401);
+  });
+
+  it("anonymizes the account, revokes refresh tokens, and frees the email for re-registration", async () => {
+    const email = "delete-me@dentsocia.dev";
+    const registerRes = await request(app)
+      .post("/api/v1/auth/register")
+      .send({ email, password: "Supersecret123", role: "hekim" });
+    const { accessToken, refreshToken } = registerRes.body;
+
+    const deleteRes = await request(app).delete("/api/v1/users/me").set("Authorization", `Bearer ${accessToken}`);
+    expect(deleteRes.status).toBe(204);
+
+    const refreshRes = await request(app).post("/api/v1/auth/refresh").send({ refreshToken });
+    expect(refreshRes.status).toBe(401);
+
+    const reregisterRes = await request(app)
+      .post("/api/v1/auth/register")
+      .send({ email, password: "Supersecret123", role: "hekim" });
+    expect(reregisterRes.status).toBe(201);
+  });
+
+  it("returns 404 on a second delete of an already-deleted account", async () => {
+    const registerRes = await request(app)
+      .post("/api/v1/auth/register")
+      .send({ email: "delete-twice@dentsocia.dev", password: "Supersecret123", role: "hekim" });
+    const { accessToken } = registerRes.body;
+
+    await request(app).delete("/api/v1/users/me").set("Authorization", `Bearer ${accessToken}`);
+    const secondDeleteRes = await request(app)
+      .delete("/api/v1/users/me")
+      .set("Authorization", `Bearer ${accessToken}`);
+    expect(secondDeleteRes.status).toBe(404);
   });
 });
