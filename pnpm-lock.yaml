@@ -14,13 +14,13 @@ importers:
 
   apps/mobile:
     dependencies:
-      '@nexora/api-client':
+      '@dentsocia/api-client':
         specifier: workspace:*
         version: link:../../packages/api-client
-      '@nexora/shared-constants':
+      '@dentsocia/shared-constants':
         specifier: workspace:*
         version: link:../../packages/shared-constants
-      '@nexora/ui-tokens':
+      '@dentsocia/ui-tokens':
         specifier: workspace:*
         version: link:../../packages/ui-tokens
       '@react-native-community/blur':
@@ -156,7 +156,7 @@ importers:
       '@aws-sdk/s3-request-presigner':
         specifier: ^3.677.0
         version: 3.1093.0
-      '@nexora/shared-constants':
+      '@dentsocia/shared-constants':
         specifier: workspace:*
         version: link:../../packages/shared-constants
       bcryptjs:
