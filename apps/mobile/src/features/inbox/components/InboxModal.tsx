@@ -12,7 +12,8 @@ interface InboxModalProps {
 const SHEET_HEIGHT: ViewStyle = { height: "85%" };
 
 // Contextual "message this person" entry point (Feed, matches, applicant lists, profiles).
-// The persistent gelen-kutusu destination lives in the tab bar instead — see InboxScreen.
+// Also hosts the general inbox list itself (no startTarget) via InboxHeaderButton, on
+// Ana Sayfa's header — see InboxHeaderButton.
 export function InboxModal({ visible, onClose, startTarget }: InboxModalProps) {
   return (
     <ModalShell visible={visible} onClose={onClose} variant="sheet" contentStyle={SHEET_HEIGHT}>
