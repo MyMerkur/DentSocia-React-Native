@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BlurView } from "@react-native-community/blur";
 import { House, Users, CirclePlus, Briefcase, User, MessageCircle, Menu } from "lucide-react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { duration, elevation, iconSizes, iconStrokeWidth, radii } from "@nexora/ui-tokens";
+import { duration, elevation, iconSizes, iconStrokeWidth, radii } from "@dentsocia/ui-tokens";
 import { ProfileScreen } from "../features/profile/screens/ProfileScreen";
 import { FeedScreen } from "../features/feed/screens/FeedScreen";
 import { HubsScreen } from "../features/hubs/screens/HubsScreen";

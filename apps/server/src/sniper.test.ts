@@ -83,7 +83,7 @@ describe("Sniper (B2B lead) endpoints", () => {
   });
 
   it("rejects search and checkout for an unverified employer", async () => {
-    const { accessToken } = await registerAndLogin("sniper-unverified@nexora.dev");
+    const { accessToken } = await registerAndLogin("sniper-unverified@dentsocia.dev");
     expect((await request(app).get("/api/v1/sniper/candidates").set("Authorization", `Bearer ${accessToken}`)).status).toBe(
       403,
     );
@@ -95,16 +95,16 @@ describe("Sniper (B2B lead) endpoints", () => {
   });
 
   it("excludes hidden-search and not-open-to-work candidates from search results", async () => {
-    const { accessToken: employerToken, userId: employerId } = await registerAndLogin("sniper-search-emp@nexora.dev");
+    const { accessToken: employerToken, userId: employerId } = await registerAndLogin("sniper-search-emp@dentsocia.dev");
     await verifyOrgKyc(employerId);
 
-    const { userId: hiddenCandidateId } = await registerAndLogin("sniper-hidden@nexora.dev", "hekim");
+    const { userId: hiddenCandidateId } = await registerAndLogin("sniper-hidden@dentsocia.dev", "hekim");
     await setDiscoverableCandidate(hiddenCandidateId, { hiddenSearch: true, specialties: ["Ortodonti"] });
 
-    const { userId: notOpenCandidateId } = await registerAndLogin("sniper-notopen@nexora.dev", "hekim");
+    const { userId: notOpenCandidateId } = await registerAndLogin("sniper-notopen@dentsocia.dev", "hekim");
     await setDiscoverableCandidate(notOpenCandidateId, { openToWork: false, specialties: ["Ortodonti"] });
 
-    const { userId: visibleCandidateId } = await registerAndLogin("sniper-visible@nexora.dev", "hekim");
+    const { userId: visibleCandidateId } = await registerAndLogin("sniper-visible@dentsocia.dev", "hekim");
     await setDiscoverableCandidate(visibleCandidateId, { specialties: ["Ortodonti"] });
 
     const searchRes = await request(app)
@@ -122,10 +122,10 @@ describe("Sniper (B2B lead) endpoints", () => {
   });
 
   it("completes the full flow: buy credit -> unlock -> idempotent re-unlock -> insufficient balance -> hidden candidate 404", async () => {
-    const { accessToken: employerToken, userId: employerId } = await registerAndLogin("sniper-flow-emp@nexora.dev");
+    const { accessToken: employerToken, userId: employerId } = await registerAndLogin("sniper-flow-emp@dentsocia.dev");
     await verifyOrgKyc(employerId);
 
-    const { userId: candidateId } = await registerAndLogin("sniper-flow-candidate@nexora.dev", "hekim");
+    const { userId: candidateId } = await registerAndLogin("sniper-flow-candidate@dentsocia.dev", "hekim");
     await setDiscoverableCandidate(candidateId, { specialties: ["Ortodonti"] });
 
     mockInitializeSniperCreditCheckout.mockResolvedValueOnce({
@@ -169,14 +169,14 @@ describe("Sniper (B2B lead) endpoints", () => {
       .set("Authorization", `Bearer ${employerToken}`);
     expect(balanceAfterSecondUnlock.body.balance).toBe(0);
 
-    const { userId: otherCandidateId } = await registerAndLogin("sniper-flow-candidate-2@nexora.dev", "hekim");
+    const { userId: otherCandidateId } = await registerAndLogin("sniper-flow-candidate-2@dentsocia.dev", "hekim");
     await setDiscoverableCandidate(otherCandidateId, { specialties: ["Ortodonti"] });
     const insufficientRes = await request(app)
       .post(`/api/v1/sniper/candidates/${otherCandidateId}/unlock`)
       .set("Authorization", `Bearer ${employerToken}`);
     expect(insufficientRes.status).toBe(402);
 
-    const { userId: hiddenCandidateId } = await registerAndLogin("sniper-flow-hidden@nexora.dev", "hekim");
+    const { userId: hiddenCandidateId } = await registerAndLogin("sniper-flow-hidden@dentsocia.dev", "hekim");
     await setDiscoverableCandidate(hiddenCandidateId, { hiddenSearch: true });
     const hiddenUnlockRes = await request(app)
       .post(`/api/v1/sniper/candidates/${hiddenCandidateId}/unlock`)
@@ -185,10 +185,10 @@ describe("Sniper (B2B lead) endpoints", () => {
   });
 
   it("charges exactly one credit when concurrent requests unlock the same candidate", async () => {
-    const { accessToken: employerToken, userId: employerId } = await registerAndLogin("sniper-race-emp@nexora.dev");
+    const { accessToken: employerToken, userId: employerId } = await registerAndLogin("sniper-race-emp@dentsocia.dev");
     await verifyOrgKyc(employerId);
 
-    const { userId: candidateId } = await registerAndLogin("sniper-race-candidate@nexora.dev", "hekim");
+    const { userId: candidateId } = await registerAndLogin("sniper-race-candidate@dentsocia.dev", "hekim");
     await setDiscoverableCandidate(candidateId, { specialties: ["Ortodonti"] });
 
     const { UserModel } = await import("./models/User");

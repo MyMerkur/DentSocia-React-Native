@@ -14,7 +14,7 @@ jest.mock("./services/iyzico.service", () => ({
 let mongoServer: MongoMemoryServer;
 let app: Express;
 
-const ADMIN_EMAIL = "admin@nexora.dev";
+const ADMIN_EMAIL = "admin@dentsocia.dev";
 
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
@@ -80,7 +80,7 @@ describe("Event ticketing endpoints", () => {
   });
 
   it("rejects event creation for an unverified user", async () => {
-    const { accessToken } = await registerAndLogin("organizer-unverified@nexora.dev");
+    const { accessToken } = await registerAndLogin("organizer-unverified@dentsocia.dev");
     const response = await request(app)
       .post("/api/v1/events")
       .set("Authorization", `Bearer ${accessToken}`)
@@ -99,7 +99,7 @@ describe("Event ticketing endpoints", () => {
   });
 
   it("completes the full ticket flow: create -> checkout -> callback -> attendee visible -> check-in", async () => {
-    const { accessToken: organizerToken, userId: organizerId } = await registerAndLogin("organizer-flow@nexora.dev");
+    const { accessToken: organizerToken, userId: organizerId } = await registerAndLogin("organizer-flow@dentsocia.dev");
     await verifyOrgKyc(organizerId);
 
     const createRes = await request(app)
@@ -110,7 +110,7 @@ describe("Event ticketing endpoints", () => {
     const eventId = createRes.body.id as string;
     const ticketTypeId = createRes.body.ticketTypes[0].id as string;
 
-    const { accessToken: buyerToken } = await registerAndLogin("buyer-flow@nexora.dev", "hekim");
+    const { accessToken: buyerToken } = await registerAndLogin("buyer-flow@dentsocia.dev", "hekim");
 
     mockInitializeEventTicketCheckout.mockResolvedValueOnce({
       token: "ticket-token-1",
@@ -173,7 +173,7 @@ describe("Event ticketing endpoints", () => {
   });
 
   it("rejects checkout when the ticket type is sold out", async () => {
-    const { accessToken: organizerToken, userId: organizerId } = await registerAndLogin("organizer-soldout@nexora.dev");
+    const { accessToken: organizerToken, userId: organizerId } = await registerAndLogin("organizer-soldout@dentsocia.dev");
     await verifyOrgKyc(organizerId);
 
     const createRes = await request(app)
@@ -183,7 +183,7 @@ describe("Event ticketing endpoints", () => {
     const eventId = createRes.body.id as string;
     const ticketTypeId = createRes.body.ticketTypes[0].id as string;
 
-    const { accessToken: buyerToken } = await registerAndLogin("buyer-soldout-1@nexora.dev", "hekim");
+    const { accessToken: buyerToken } = await registerAndLogin("buyer-soldout-1@dentsocia.dev", "hekim");
     mockInitializeEventTicketCheckout.mockResolvedValueOnce({
       token: "ticket-token-soldout",
       checkoutFormContent: "<form></form>",
@@ -199,7 +199,7 @@ describe("Event ticketing endpoints", () => {
       .type("form")
       .send({ token: "ticket-token-soldout" });
 
-    const { accessToken: secondBuyerToken } = await registerAndLogin("buyer-soldout-2@nexora.dev", "hekim");
+    const { accessToken: secondBuyerToken } = await registerAndLogin("buyer-soldout-2@dentsocia.dev", "hekim");
     const secondCheckoutRes = await request(app)
       .post(`/api/v1/events/${eventId}/tickets/checkout`)
       .set("Authorization", `Bearer ${secondBuyerToken}`)
@@ -208,7 +208,7 @@ describe("Event ticketing endpoints", () => {
   });
 
   it("marks a ticket oversold instead of paid when capacity runs out between checkout and payment", async () => {
-    const { accessToken: organizerToken, userId: organizerId } = await registerAndLogin("organizer-oversell@nexora.dev");
+    const { accessToken: organizerToken, userId: organizerId } = await registerAndLogin("organizer-oversell@dentsocia.dev");
     await verifyOrgKyc(organizerId);
 
     const createRes = await request(app)
@@ -220,7 +220,7 @@ describe("Event ticketing endpoints", () => {
 
     // Both buyers start checkout while soldCount is still 0 (the soft check at checkout-start
     // cannot see the other's in-flight purchase) — simulates the race the audit flagged.
-    const { accessToken: firstBuyerToken } = await registerAndLogin("buyer-oversell-1@nexora.dev", "hekim");
+    const { accessToken: firstBuyerToken } = await registerAndLogin("buyer-oversell-1@dentsocia.dev", "hekim");
     mockInitializeEventTicketCheckout.mockResolvedValueOnce({
       token: "ticket-token-oversell-1",
       checkoutFormContent: "<form></form>",
@@ -230,7 +230,7 @@ describe("Event ticketing endpoints", () => {
       .set("Authorization", `Bearer ${firstBuyerToken}`)
       .send({ ticketTypeId, ...billingFields });
 
-    const { accessToken: secondBuyerToken } = await registerAndLogin("buyer-oversell-2@nexora.dev", "hekim");
+    const { accessToken: secondBuyerToken } = await registerAndLogin("buyer-oversell-2@dentsocia.dev", "hekim");
     mockInitializeEventTicketCheckout.mockResolvedValueOnce({
       token: "ticket-token-oversell-2",
       checkoutFormContent: "<form></form>",
@@ -271,7 +271,7 @@ describe("Event ticketing endpoints", () => {
   });
 
   it("does not issue a ticket when the payment fails", async () => {
-    const { accessToken: organizerToken, userId: organizerId } = await registerAndLogin("organizer-fail@nexora.dev");
+    const { accessToken: organizerToken, userId: organizerId } = await registerAndLogin("organizer-fail@dentsocia.dev");
     await verifyOrgKyc(organizerId);
 
     const createRes = await request(app)
@@ -281,7 +281,7 @@ describe("Event ticketing endpoints", () => {
     const eventId = createRes.body.id as string;
     const ticketTypeId = createRes.body.ticketTypes[0].id as string;
 
-    const { accessToken: buyerToken } = await registerAndLogin("buyer-fail@nexora.dev", "hekim");
+    const { accessToken: buyerToken } = await registerAndLogin("buyer-fail@dentsocia.dev", "hekim");
     mockInitializeEventTicketCheckout.mockResolvedValueOnce({
       token: "ticket-token-fail",
       checkoutFormContent: "<form></form>",

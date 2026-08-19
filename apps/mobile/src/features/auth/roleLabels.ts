@@ -1,4 +1,4 @@
-import { CANDIDATE_ROLES, EMPLOYER_ROLES, type CandidateRole, type EmployerRole } from "@nexora/shared-constants";
+import { CANDIDATE_ROLES, EMPLOYER_ROLES, type CandidateRole, type EmployerRole } from "@dentsocia/shared-constants";
 
 export type UserRole = CandidateRole | EmployerRole;
 

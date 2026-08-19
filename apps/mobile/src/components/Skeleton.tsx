@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { StyleSheet, View, type DimensionValue } from "react-native";
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
-import { radii, withAlpha } from "@nexora/ui-tokens";
+import { radii, withAlpha } from "@dentsocia/ui-tokens";
 import { useTheme } from "../store/useThemeStore";
 
 interface SkeletonProps {

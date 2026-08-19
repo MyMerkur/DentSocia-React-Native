@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { EMPLOYER_ROLES } from "@nexora/shared-constants";
+import { EMPLOYER_ROLES } from "@dentsocia/shared-constants";
 import { findJobById, listOpenJobsExcluding } from "../repositories/job.repository";
 import { findUserById, listSwipeableCandidates } from "../repositories/user.repository";
 import {

@@ -74,7 +74,7 @@ describe("Org endpoints", () => {
   });
 
   it("returns 404 for a non-existent org", async () => {
-    const { accessToken } = await registerAndLogin("org-viewer@nexora.dev");
+    const { accessToken } = await registerAndLogin("org-viewer@dentsocia.dev");
 
     const response = await request(app)
       .get("/api/v1/orgs/6a00000000000000000000aa")
@@ -84,8 +84,8 @@ describe("Org endpoints", () => {
   });
 
   it("returns 404 for a user whose role is not an employer role", async () => {
-    const { accessToken } = await registerAndLogin("org-viewer-2@nexora.dev");
-    const { userId: hekimId } = await registerAndLogin("org-not-employer@nexora.dev", "hekim");
+    const { accessToken } = await registerAndLogin("org-viewer-2@dentsocia.dev");
+    const { userId: hekimId } = await registerAndLogin("org-not-employer@dentsocia.dev", "hekim");
 
     const response = await request(app)
       .get(`/api/v1/orgs/${hekimId}`)
@@ -95,26 +95,26 @@ describe("Org endpoints", () => {
   });
 
   it("finds orgs by display name via search", async () => {
-    const { accessToken: viewerToken } = await registerAndLogin("org-searcher@nexora.dev");
-    const { accessToken: orgToken } = await registerAndLogin("org-searchable@nexora.dev", "klinik");
+    const { accessToken: viewerToken } = await registerAndLogin("org-searcher@dentsocia.dev");
+    const { accessToken: orgToken } = await registerAndLogin("org-searchable@dentsocia.dev", "klinik");
 
     await request(app)
       .patch("/api/v1/users/me/showcase")
       .set("Authorization", `Bearer ${orgToken}`)
-      .send({ displayName: "Nexora Diş Kliniği" });
+      .send({ displayName: "DentSocia Diş Kliniği" });
 
     const response = await request(app)
-      .get("/api/v1/orgs/search?q=Nexora")
+      .get("/api/v1/orgs/search?q=DentSocia")
       .set("Authorization", `Bearer ${viewerToken}`);
 
     expect(response.status).toBe(200);
-    expect(response.body.orgs.some((org: { displayName: string }) => org.displayName === "Nexora Diş Kliniği")).toBe(
+    expect(response.body.orgs.some((org: { displayName: string }) => org.displayName === "DentSocia Diş Kliniği")).toBe(
       true,
     );
   });
 
   it("returns showcase info, verification, open jobs, team and recent cases for an org", async () => {
-    const { accessToken: orgToken, userId: orgId } = await registerAndLogin("org-full@nexora.dev", "klinik");
+    const { accessToken: orgToken, userId: orgId } = await registerAndLogin("org-full@dentsocia.dev", "klinik");
     await verifyOrgKyc(orgId);
     await request(app)
       .patch("/api/v1/users/me/showcase")
@@ -132,7 +132,7 @@ describe("Org endpoints", () => {
       .send({ status: "closed" });
 
     const { accessToken: memberToken, userId: memberId } = await registerAndLogin(
-      "org-team-member@nexora.dev",
+      "org-team-member@dentsocia.dev",
       "hekim",
     );
     const { UserModel } = await import("./models/User");
@@ -144,7 +144,7 @@ describe("Org endpoints", () => {
       .set("Authorization", `Bearer ${memberToken}`)
       .send({ title: "Ekip üyesinin vakası", images: [{ storageKey: "cases/fake/1.jpeg", stage: "after" }] });
 
-    const { accessToken: viewerToken } = await registerAndLogin("org-viewer-3@nexora.dev");
+    const { accessToken: viewerToken } = await registerAndLogin("org-viewer-3@dentsocia.dev");
     const response = await request(app).get(`/api/v1/orgs/${orgId}`).set("Authorization", `Bearer ${viewerToken}`);
 
     expect(response.status).toBe(200);

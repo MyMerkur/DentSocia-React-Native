@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
-import { getApiErrorMessage, uploadFileToPresignedUrl } from "@nexora/api-client";
-import type { MicroCompetencyTag } from "@nexora/shared-constants";
-import { radii, spacing, typography } from "@nexora/ui-tokens";
+import { getApiErrorMessage, uploadFileToPresignedUrl } from "@dentsocia/api-client";
+import type { MicroCompetencyTag } from "@dentsocia/shared-constants";
+import { radii, spacing, typography } from "@dentsocia/ui-tokens";
 import { useTheme } from "../../../store/useThemeStore";
 import { BrandSpinner } from "../../../components/BrandSpinner";
 import {

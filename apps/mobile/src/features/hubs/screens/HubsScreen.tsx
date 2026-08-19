@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Users } from "lucide-react-native";
-import { getApiErrorMessage } from "@nexora/api-client";
-import { radii, spacing, typography, type ThemeColors } from "@nexora/ui-tokens";
+import { getApiErrorMessage } from "@dentsocia/api-client";
+import { radii, spacing, typography, type ThemeColors } from "@dentsocia/ui-tokens";
 import { useTheme } from "../../../store/useThemeStore";
 import { getMe, type UserProfile } from "../../../services/profileApi";
 import { discoverHubs, listMyHubs, listManagedHubs, type HubItem } from "../../../services/hubApi";

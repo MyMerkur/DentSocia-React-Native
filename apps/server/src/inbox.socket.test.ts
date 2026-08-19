@@ -54,8 +54,8 @@ function connect(token: string): Promise<ClientSocket> {
 
 describe("Inbox real-time layer", () => {
   it("delivers a message:new event to the recipient's socket room", async () => {
-    const sender = await registerAndLogin("socket-sender@nexora.dev");
-    const recipient = await registerAndLogin("socket-recipient@nexora.dev");
+    const sender = await registerAndLogin("socket-sender@dentsocia.dev");
+    const recipient = await registerAndLogin("socket-recipient@dentsocia.dev");
 
     const recipientSocket = await connect(recipient.accessToken);
 

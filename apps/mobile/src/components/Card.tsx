@@ -1,5 +1,5 @@
 import { Platform, StyleSheet, View, type StyleProp, type ViewStyle, type ViewProps } from "react-native";
-import { elevation, radii, spacing, type ThemeColors } from "@nexora/ui-tokens";
+import { elevation, radii, spacing, type ThemeColors } from "@dentsocia/ui-tokens";
 import { useTheme } from "../store/useThemeStore";
 
 export type CardVariant = "flat" | "elevated" | "glass";

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Modal, Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
 import { BlurView } from "@react-native-community/blur";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
-import { radii, spacing, spring } from "@nexora/ui-tokens";
+import { radii, spacing, spring } from "@dentsocia/ui-tokens";
 import { useTheme } from "../store/useThemeStore";
 
 export type ModalShellVariant = "sheet" | "center";

@@ -1,4 +1,4 @@
-// Design system v2 — "Gece Laciverti & Altın" (Nexora_Tasarim_Sistemi_ClaudeCode.md).
+// Design system v2 — "Gece Laciverti & Altın" (DentSocia_Tasarim_Sistemi_ClaudeCode.md).
 // Replaces the v1 palette outright (rejected by the user as "sert"/"kahverengi" —
 // see PR history). Existing token *names* are kept so no consuming file needs to
 // change; only hex/rgba values move to the new cool-navy + gold identity, plus a

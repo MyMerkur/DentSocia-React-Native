@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { StyleSheet, Text, View, type StyleProp, type ViewStyle } from "react-native";
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withDelay, withTiming } from "react-native-reanimated";
-import { fontFamilies, radii, spacing, typographyPresets } from "@nexora/ui-tokens";
+import { fontFamilies, radii, spacing, typographyPresets } from "@dentsocia/ui-tokens";
 import { useTheme } from "../store/useThemeStore";
 import { LockIcon } from "./icons";
 

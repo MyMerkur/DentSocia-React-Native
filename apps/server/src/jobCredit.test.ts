@@ -69,7 +69,7 @@ describe("Job credit endpoints", () => {
   });
 
   it("rejects checkout for an unverified employer", async () => {
-    const { accessToken } = await registerAndLogin("credit-unverified@nexora.dev");
+    const { accessToken } = await registerAndLogin("credit-unverified@dentsocia.dev");
     const response = await request(app)
       .post("/api/v1/job-credits/checkout")
       .set("Authorization", `Bearer ${accessToken}`)
@@ -78,7 +78,7 @@ describe("Job credit endpoints", () => {
   });
 
   it("completes the full checkout -> callback -> balance flow and is idempotent", async () => {
-    const { accessToken, userId } = await registerAndLogin("credit-flow@nexora.dev");
+    const { accessToken, userId } = await registerAndLogin("credit-flow@dentsocia.dev");
     await verifyOrgKyc(userId);
 
     mockInitializeJobCreditCheckout.mockResolvedValueOnce({
@@ -119,7 +119,7 @@ describe("Job credit endpoints", () => {
   });
 
   it("does not grant a credit when the payment fails", async () => {
-    const { accessToken, userId } = await registerAndLogin("credit-fail@nexora.dev");
+    const { accessToken, userId } = await registerAndLogin("credit-fail@dentsocia.dev");
     await verifyOrgKyc(userId);
 
     mockInitializeJobCreditCheckout.mockResolvedValueOnce({

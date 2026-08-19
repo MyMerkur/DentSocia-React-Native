@@ -25,7 +25,7 @@ afterAll(async () => {
 });
 
 describe("Account lockout", () => {
-  const credentials = { email: "lockout@nexora.dev", password: "Supersecret123", role: "hekim" as const };
+  const credentials = { email: "lockout@dentsocia.dev", password: "Supersecret123", role: "hekim" as const };
 
   beforeAll(async () => {
     await request(app).post("/api/v1/auth/register").send(credentials);

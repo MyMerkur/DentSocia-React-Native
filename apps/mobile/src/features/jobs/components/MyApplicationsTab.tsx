@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { FileText } from "lucide-react-native";
-import { getApiErrorMessage } from "@nexora/api-client";
-import { spacing, typography } from "@nexora/ui-tokens";
+import { getApiErrorMessage } from "@dentsocia/api-client";
+import { spacing, typography } from "@dentsocia/ui-tokens";
 import { getMyApplications, type MyApplicationItem } from "../../../services/jobApi";
 import { statusLabel, statusBadgeVariant } from "../statusStyles";
 import { InboxModal } from "../../inbox/components/InboxModal";

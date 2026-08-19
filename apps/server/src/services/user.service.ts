@@ -1,7 +1,7 @@
 import { findUserById } from "../repositories/user.repository";
 import { buildAvatarStorageKey, createDownloadUrl, createUploadUrl } from "../config/storage";
 import { HttpError } from "../utils/httpError";
-import { EMPLOYER_ROLES } from "@nexora/shared-constants";
+import { EMPLOYER_ROLES } from "@dentsocia/shared-constants";
 import type { updateCareerSchema, updateShowcaseSchema } from "../validators/user.validator";
 import type { z } from "zod";
 

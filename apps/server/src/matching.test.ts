@@ -56,11 +56,11 @@ describe("Matching endpoints", () => {
   });
 
   it("excludes jobs already swiped by the candidate from the feed", async () => {
-    const { accessToken: employerToken, userId: employerId } = await registerAndLogin("match-feed-employer@nexora.dev", "klinik");
+    const { accessToken: employerToken, userId: employerId } = await registerAndLogin("match-feed-employer@dentsocia.dev", "klinik");
     await verifyOrgKyc(employerId);
     const jobId = await createOpenJob(employerToken, "Swipe hariç tutma testi ilanı");
 
-    const { accessToken: candidateToken } = await registerAndLogin("match-feed-candidate@nexora.dev");
+    const { accessToken: candidateToken } = await registerAndLogin("match-feed-candidate@dentsocia.dev");
 
     const beforeSwipe = await request(app)
       .get("/api/v1/matching/jobs/feed")
@@ -79,13 +79,13 @@ describe("Matching endpoints", () => {
   });
 
   it("excludes candidates in hidden search mode from the employer's candidate feed", async () => {
-    const { accessToken: employerToken, userId: employerId } = await registerAndLogin("match-hidden-employer@nexora.dev", "firma");
+    const { accessToken: employerToken, userId: employerId } = await registerAndLogin("match-hidden-employer@dentsocia.dev", "firma");
     await verifyOrgKyc(employerId);
     const jobId = await createOpenJob(employerToken, "Gizli mod testi ilanı");
 
-    const { userId: visibleCandidateId } = await registerAndLogin("match-hidden-visible@nexora.dev");
+    const { userId: visibleCandidateId } = await registerAndLogin("match-hidden-visible@dentsocia.dev");
     await setOpenToWork(visibleCandidateId, false);
-    const { userId: hiddenCandidateId } = await registerAndLogin("match-hidden-hidden@nexora.dev");
+    const { userId: hiddenCandidateId } = await registerAndLogin("match-hidden-hidden@dentsocia.dev");
     await setOpenToWork(hiddenCandidateId, true);
 
     const response = await request(app)
@@ -99,11 +99,11 @@ describe("Matching endpoints", () => {
   });
 
   it("rejects candidate feed access for a user who doesn't own the job", async () => {
-    const { accessToken: ownerToken, userId: ownerId } = await registerAndLogin("match-owner@nexora.dev", "dernek");
+    const { accessToken: ownerToken, userId: ownerId } = await registerAndLogin("match-owner@dentsocia.dev", "dernek");
     await verifyOrgKyc(ownerId);
     const jobId = await createOpenJob(ownerToken, "Sahiplik testi ilanı");
 
-    const { accessToken: otherToken } = await registerAndLogin("match-other-employer@nexora.dev", "klinik");
+    const { accessToken: otherToken } = await registerAndLogin("match-other-employer@dentsocia.dev", "klinik");
 
     const response = await request(app)
       .get(`/api/v1/matching/jobs/${jobId}/candidates`)
@@ -113,11 +113,11 @@ describe("Matching endpoints", () => {
   });
 
   it("does not create a match on a one-sided right swipe", async () => {
-    const { accessToken: employerToken, userId: employerId } = await registerAndLogin("match-onesided-employer@nexora.dev", "klinik");
+    const { accessToken: employerToken, userId: employerId } = await registerAndLogin("match-onesided-employer@dentsocia.dev", "klinik");
     await verifyOrgKyc(employerId);
     const jobId = await createOpenJob(employerToken, "Tek taraflı swipe testi ilanı");
 
-    const { accessToken: candidateToken } = await registerAndLogin("match-onesided-candidate@nexora.dev");
+    const { accessToken: candidateToken } = await registerAndLogin("match-onesided-candidate@dentsocia.dev");
 
     const response = await request(app)
       .post(`/api/v1/matching/jobs/${jobId}/swipe`)
@@ -130,13 +130,13 @@ describe("Matching endpoints", () => {
 
   it("rejects a direct swipe on a hidden-search candidate even when the employer already knows their id", async () => {
     const { accessToken: employerToken, userId: employerId } = await registerAndLogin(
-      "match-direct-hidden-employer@nexora.dev",
+      "match-direct-hidden-employer@dentsocia.dev",
       "klinik",
     );
     await verifyOrgKyc(employerId);
     const jobId = await createOpenJob(employerToken, "Doğrudan swipe gizlilik testi ilanı");
 
-    const { userId: hiddenCandidateId } = await registerAndLogin("match-direct-hidden-candidate@nexora.dev");
+    const { userId: hiddenCandidateId } = await registerAndLogin("match-direct-hidden-candidate@dentsocia.dev");
     await setOpenToWork(hiddenCandidateId, true);
 
     const response = await request(app)
@@ -148,11 +148,11 @@ describe("Matching endpoints", () => {
   });
 
   it("creates a match and an inbox thread when both sides swipe right", async () => {
-    const { accessToken: employerToken, userId: employerId } = await registerAndLogin("match-mutual-employer@nexora.dev", "firma");
+    const { accessToken: employerToken, userId: employerId } = await registerAndLogin("match-mutual-employer@dentsocia.dev", "firma");
     await verifyOrgKyc(employerId);
     const jobId = await createOpenJob(employerToken, "Karşılıklı eşleşme testi ilanı");
 
-    const { accessToken: candidateToken, userId: candidateId } = await registerAndLogin("match-mutual-candidate@nexora.dev");
+    const { accessToken: candidateToken, userId: candidateId } = await registerAndLogin("match-mutual-candidate@dentsocia.dev");
     await setOpenToWork(candidateId, false);
 
     const candidateSwipe = await request(app)

@@ -84,7 +84,7 @@ describe("Case AI draft endpoint", () => {
   });
 
   it("rejects users below instructor kycLevel", async () => {
-    const { accessToken } = await registerAndLogin("case-draft-non-instructor@nexora.dev");
+    const { accessToken } = await registerAndLogin("case-draft-non-instructor@dentsocia.dev");
 
     const response = await request(app)
       .post("/api/v1/cases/ai-draft")
@@ -95,7 +95,7 @@ describe("Case AI draft endpoint", () => {
   });
 
   it("rejects an empty storageKeys array", async () => {
-    const { accessToken, userId } = await registerAndLogin("case-draft-empty@nexora.dev");
+    const { accessToken, userId } = await registerAndLogin("case-draft-empty@dentsocia.dev");
     await makeInstructor(userId);
 
     const response = await request(app)
@@ -107,7 +107,7 @@ describe("Case AI draft endpoint", () => {
   });
 
   it("generates a case draft for an instructor from uploaded images and caption text", async () => {
-    const { accessToken, userId } = await registerAndLogin("case-draft-instructor@nexora.dev");
+    const { accessToken, userId } = await registerAndLogin("case-draft-instructor@dentsocia.dev");
     await makeInstructor(userId);
 
     mockDraftResponse({

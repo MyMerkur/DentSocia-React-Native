@@ -38,8 +38,8 @@ describe("Clinic review endpoints", () => {
   });
 
   it("rejects rating a non-corporate account", async () => {
-    const { accessToken: raterToken } = await registerAndLogin("review-non-corp-rater@nexora.dev");
-    const { userId: targetId } = await registerAndLogin("review-non-corp-target@nexora.dev");
+    const { accessToken: raterToken } = await registerAndLogin("review-non-corp-rater@dentsocia.dev");
+    const { userId: targetId } = await registerAndLogin("review-non-corp-target@dentsocia.dev");
 
     const response = await request(app)
       .post(`/api/v1/orgs/${targetId}/reviews`)
@@ -50,8 +50,8 @@ describe("Clinic review endpoints", () => {
   });
 
   it("treats a second rating from the same user as an update, not a duplicate", async () => {
-    const { accessToken: raterToken } = await registerAndLogin("review-upsert-rater@nexora.dev");
-    const { userId: orgId } = await registerAndLogin("review-upsert-org@nexora.dev", "klinik");
+    const { accessToken: raterToken } = await registerAndLogin("review-upsert-rater@dentsocia.dev");
+    const { userId: orgId } = await registerAndLogin("review-upsert-org@dentsocia.dev", "klinik");
 
     await request(app)
       .post(`/api/v1/orgs/${orgId}/reviews`)
@@ -73,9 +73,9 @@ describe("Clinic review endpoints", () => {
   });
 
   it("computes the average rating correctly on the org profile", async () => {
-    const { accessToken: raterOneToken } = await registerAndLogin("review-avg-rater-one@nexora.dev");
-    const { accessToken: raterTwoToken } = await registerAndLogin("review-avg-rater-two@nexora.dev");
-    const { userId: orgId } = await registerAndLogin("review-avg-org@nexora.dev", "firma");
+    const { accessToken: raterOneToken } = await registerAndLogin("review-avg-rater-one@dentsocia.dev");
+    const { accessToken: raterTwoToken } = await registerAndLogin("review-avg-rater-two@dentsocia.dev");
+    const { userId: orgId } = await registerAndLogin("review-avg-org@dentsocia.dev", "firma");
 
     await request(app)
       .post(`/api/v1/orgs/${orgId}/reviews`)

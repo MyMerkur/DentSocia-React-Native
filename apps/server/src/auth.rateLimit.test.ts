@@ -26,7 +26,7 @@ afterAll(async () => {
 
 describe("Auth rate limiting", () => {
   it("returns 429 after exceeding the configured limit", async () => {
-    const payload = { email: "ratelimit@nexora.dev", password: "WrongPassword1" };
+    const payload = { email: "ratelimit@dentsocia.dev", password: "WrongPassword1" };
 
     for (let i = 0; i < 3; i += 1) {
       const response = await request(app).post("/api/v1/auth/login").send(payload);

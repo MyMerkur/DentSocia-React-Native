@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withSequence, withSpring } from "react-native-reanimated";
-import { fontFamilies } from "@nexora/ui-tokens";
+import { fontFamilies } from "@dentsocia/ui-tokens";
 import { useTheme } from "../store/useThemeStore";
 import { HeartIcon } from "./icons";
 

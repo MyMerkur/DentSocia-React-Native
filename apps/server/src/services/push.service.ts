@@ -22,7 +22,7 @@ function getFirebaseApp(): App {
           privateKey: env.FCM_PRIVATE_KEY.replace(/\\n/g, "\n"),
         }),
       },
-      "nexora-push",
+      "dentsocia-push",
     );
   }
   return firebaseApp;

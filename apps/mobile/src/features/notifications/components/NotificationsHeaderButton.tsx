@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Bell } from "lucide-react-native";
-import { iconSizes, iconStrokeWidth, radii } from "@nexora/ui-tokens";
+import { iconSizes, iconStrokeWidth, radii } from "@dentsocia/ui-tokens";
 import { useTheme } from "../../../store/useThemeStore";
 import { getUnreadCount } from "../../../services/notificationApi";
 import { NotificationsModal } from "./NotificationsModal";

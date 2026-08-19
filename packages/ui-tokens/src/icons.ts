@@ -5,7 +5,7 @@
 //   import { Search } from "lucide-react-native";
 //   <Search size={iconSizes.md} color={colors.textPrimary} strokeWidth={iconStrokeWidth} />
 //
-// Design system v2 revision (Nexora_Tasarim_Sistemi_ClaudeCode.md §8): the handful of
+// Design system v2 revision (DentSocia_Tasarim_Sistemi_ClaudeCode.md §8): the handful of
 // *recurring structural* icons (lock, document, payment card, heart/like) are custom
 // SVGs instead, under apps/mobile/src/components/icons/ — not a full icon-library swap,
 // this stays the exception rather than the rule.

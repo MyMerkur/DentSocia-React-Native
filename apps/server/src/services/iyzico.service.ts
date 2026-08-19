@@ -163,7 +163,7 @@ export async function initializeJobCreditCheckout(
       {
         id: "job-posting-credit",
         price: params.price,
-        name: "NEXORA İlan Yayın Kredisi",
+        name: "DENTSOCIA İlan Yayın Kredisi",
         category1: "İlan",
         itemType: "VIRTUAL",
       },
@@ -262,7 +262,7 @@ export async function initializeSniperCreditCheckout(
       {
         id: "sniper-credit",
         price: params.price,
-        name: "NEXORA Keskin Nişancı Kredisi",
+        name: "DENTSOCIA Keskin Nişancı Kredisi",
         category1: "Lead",
         itemType: "VIRTUAL",
       },
@@ -282,7 +282,7 @@ export interface CreateSubscriptionProductAndPlanResult {
   pricingPlanReferenceCode: string;
 }
 
-// Dynamic per-Hub product/plan provisioning for Nexora Hubs paid membership — unlike the
+// Dynamic per-Hub product/plan provisioning for DentSocia Hubs paid membership — unlike the
 // app-wide teaser_monthly/clinic_premium_monthly plans (fixed, created once via iyzico's
 // dashboard/support, referenced via env), each paid Hub gets its own iyzico product + monthly
 // recurring pricing plan created here at Hub-creation time. Same IYZWSv2 auth, iyzicoRequest()

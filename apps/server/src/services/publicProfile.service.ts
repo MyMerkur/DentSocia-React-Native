@@ -1,4 +1,4 @@
-import { EMPLOYER_ROLES } from "@nexora/shared-constants";
+import { EMPLOYER_ROLES } from "@dentsocia/shared-constants";
 import { findUserById } from "../repositories/user.repository";
 import { createDownloadUrl } from "../config/storage";
 import { listPublicReferences } from "./reference.service";

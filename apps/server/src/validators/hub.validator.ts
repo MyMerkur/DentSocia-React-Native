@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MICRO_COMPETENCY_TAGS } from "@nexora/shared-constants";
+import { MICRO_COMPETENCY_TAGS } from "@dentsocia/shared-constants";
 import { HUB_TYPES } from "../models/Hub";
 
 export const createHubSchema = z

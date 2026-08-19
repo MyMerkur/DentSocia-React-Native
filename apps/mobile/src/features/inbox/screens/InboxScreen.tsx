@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import { spacing } from "@nexora/ui-tokens";
+import { spacing } from "@dentsocia/ui-tokens";
 import { useTheme } from "../../../store/useThemeStore";
 import { InboxView } from "../components/InboxView";
 

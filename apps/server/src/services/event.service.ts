@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { EMPLOYER_ROLES } from "@nexora/shared-constants";
+import { EMPLOYER_ROLES } from "@dentsocia/shared-constants";
 import { env } from "../config/env";
 import { findUserById } from "../repositories/user.repository";
 import * as eventRepo from "../repositories/event.repository";

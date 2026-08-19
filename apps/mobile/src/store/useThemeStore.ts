@@ -1,6 +1,6 @@
 import { Appearance } from "react-native";
 import { create } from "zustand";
-import { colorSchemes } from "@nexora/ui-tokens";
+import { colorSchemes } from "@dentsocia/ui-tokens";
 
 type Scheme = "light" | "dark";
 

@@ -1,6 +1,6 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import { BadgeCheck } from "lucide-react-native";
-import { fontFamilies } from "@nexora/ui-tokens";
+import { fontFamilies } from "@dentsocia/ui-tokens";
 import { useTheme } from "../store/useThemeStore";
 
 export type AvatarSize = "sm" | "md" | "lg";

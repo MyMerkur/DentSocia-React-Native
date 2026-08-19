@@ -52,7 +52,7 @@ describe("Course/Enrollment/Certificate endpoints", () => {
   });
 
   it("rejects course creation for a non-instructor", async () => {
-    const { accessToken } = await registerAndLogin("course-non-instructor@nexora.dev");
+    const { accessToken } = await registerAndLogin("course-non-instructor@dentsocia.dev");
     const response = await request(app)
       .post("/api/v1/courses")
       .set("Authorization", `Bearer ${accessToken}`)
@@ -61,7 +61,7 @@ describe("Course/Enrollment/Certificate endpoints", () => {
   });
 
   it("creates and lists courses for an instructor", async () => {
-    const { accessToken, userId } = await registerAndLogin("course-instructor@nexora.dev");
+    const { accessToken, userId } = await registerAndLogin("course-instructor@dentsocia.dev");
     await setKycLevel(userId, 4);
 
     const created = await request(app)
@@ -78,11 +78,11 @@ describe("Course/Enrollment/Certificate endpoints", () => {
   });
 
   it("rejects enrollment for a user below kycLevel 1", async () => {
-    const { accessToken: instructorToken, userId: instructorId } = await registerAndLogin("course-enroll-instructor@nexora.dev");
+    const { accessToken: instructorToken, userId: instructorId } = await registerAndLogin("course-enroll-instructor@dentsocia.dev");
     await setKycLevel(instructorId, 4);
     const courseId = await createCourse(instructorToken);
 
-    const { accessToken: participantToken } = await registerAndLogin("course-enroll-unverified@nexora.dev");
+    const { accessToken: participantToken } = await registerAndLogin("course-enroll-unverified@dentsocia.dev");
     const response = await request(app)
       .post(`/api/v1/courses/${courseId}/enroll`)
       .set("Authorization", `Bearer ${participantToken}`);
@@ -90,7 +90,7 @@ describe("Course/Enrollment/Certificate endpoints", () => {
   });
 
   it("rejects an instructor enrolling in their own course", async () => {
-    const { accessToken, userId } = await registerAndLogin("course-self-enroll@nexora.dev");
+    const { accessToken, userId } = await registerAndLogin("course-self-enroll@dentsocia.dev");
     await setKycLevel(userId, 4);
     const courseId = await createCourse(accessToken);
 
@@ -101,11 +101,11 @@ describe("Course/Enrollment/Certificate endpoints", () => {
   });
 
   it("rejects duplicate enrollment", async () => {
-    const { accessToken: instructorToken, userId: instructorId } = await registerAndLogin("course-dup-instructor@nexora.dev");
+    const { accessToken: instructorToken, userId: instructorId } = await registerAndLogin("course-dup-instructor@dentsocia.dev");
     await setKycLevel(instructorId, 4);
     const courseId = await createCourse(instructorToken);
 
-    const { accessToken: participantToken, userId: participantId } = await registerAndLogin("course-dup-participant@nexora.dev");
+    const { accessToken: participantToken, userId: participantId } = await registerAndLogin("course-dup-participant@dentsocia.dev");
     await setKycLevel(participantId, 1);
 
     const first = await request(app)
@@ -120,11 +120,11 @@ describe("Course/Enrollment/Certificate endpoints", () => {
   });
 
   it("rejects a non-owner from viewing or completing enrollments", async () => {
-    const { accessToken: instructorToken, userId: instructorId } = await registerAndLogin("course-owner-instructor@nexora.dev");
+    const { accessToken: instructorToken, userId: instructorId } = await registerAndLogin("course-owner-instructor@dentsocia.dev");
     await setKycLevel(instructorId, 4);
     const courseId = await createCourse(instructorToken);
 
-    const { accessToken: outsiderToken, userId: outsiderId } = await registerAndLogin("course-owner-outsider@nexora.dev");
+    const { accessToken: outsiderToken, userId: outsiderId } = await registerAndLogin("course-owner-outsider@dentsocia.dev");
     await setKycLevel(outsiderId, 4);
 
     const listRes = await request(app)
@@ -139,11 +139,11 @@ describe("Course/Enrollment/Certificate endpoints", () => {
   });
 
   it("supports the full enroll -> complete -> certificate -> verify flow", async () => {
-    const { accessToken: instructorToken, userId: instructorId } = await registerAndLogin("course-flow-instructor@nexora.dev");
+    const { accessToken: instructorToken, userId: instructorId } = await registerAndLogin("course-flow-instructor@dentsocia.dev");
     await setKycLevel(instructorId, 4);
     const courseId = await createCourse(instructorToken);
 
-    const { accessToken: participantToken, userId: participantId } = await registerAndLogin("course-flow-participant@nexora.dev");
+    const { accessToken: participantToken, userId: participantId } = await registerAndLogin("course-flow-participant@dentsocia.dev");
     await setKycLevel(participantId, 1);
 
     const enrollRes = await request(app)

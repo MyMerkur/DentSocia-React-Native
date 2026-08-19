@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, View, type TextInputProps } from "react-native";
-import { fontFamilies, radii, spacing } from "@nexora/ui-tokens";
+import { fontFamilies, radii, spacing } from "@dentsocia/ui-tokens";
 import { useTheme } from "../store/useThemeStore";
 
 interface InputProps extends TextInputProps {

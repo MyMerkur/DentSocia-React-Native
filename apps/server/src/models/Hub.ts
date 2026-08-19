@@ -1,5 +1,5 @@
 import { Schema, model, type InferSchemaType } from "mongoose";
-import { MICRO_COMPETENCY_TAGS } from "@nexora/shared-constants";
+import { MICRO_COMPETENCY_TAGS } from "@dentsocia/shared-constants";
 
 export const HUB_TYPES = ["free", "paid"] as const;
 export type HubType = (typeof HUB_TYPES)[number];

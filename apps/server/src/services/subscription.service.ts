@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { EMPLOYER_ROLES, CANDIDATE_ROLES } from "@nexora/shared-constants";
+import { EMPLOYER_ROLES, CANDIDATE_ROLES } from "@dentsocia/shared-constants";
 import { findUserById, updateBillingInfo } from "../repositories/user.repository";
 import * as subscriptionRepo from "../repositories/subscription.repository";
 import * as paymentEventRepo from "../repositories/paymentEvent.repository";

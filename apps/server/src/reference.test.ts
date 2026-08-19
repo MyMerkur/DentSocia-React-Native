@@ -38,8 +38,8 @@ describe("Reference endpoints", () => {
   });
 
   it("rejects a corporate account requesting a reference about itself", async () => {
-    const { accessToken: orgToken } = await registerAndLogin("ref-corp-requester@nexora.dev", "klinik");
-    const { userId: authorId } = await registerAndLogin("ref-corp-requester-author@nexora.dev");
+    const { accessToken: orgToken } = await registerAndLogin("ref-corp-requester@dentsocia.dev", "klinik");
+    const { userId: authorId } = await registerAndLogin("ref-corp-requester-author@dentsocia.dev");
 
     const response = await request(app)
       .post("/api/v1/references/requests")
@@ -50,8 +50,8 @@ describe("Reference endpoints", () => {
   });
 
   it("rejects writing a reference about a corporate account", async () => {
-    const { accessToken } = await registerAndLogin("ref-corp-write-author@nexora.dev");
-    const { userId: orgId } = await registerAndLogin("ref-corp-write-target@nexora.dev", "klinik");
+    const { accessToken } = await registerAndLogin("ref-corp-write-author@dentsocia.dev");
+    const { userId: orgId } = await registerAndLogin("ref-corp-write-target@dentsocia.dev", "klinik");
 
     const response = await request(app)
       .post("/api/v1/references")
@@ -62,8 +62,8 @@ describe("Reference endpoints", () => {
   });
 
   it("supports the request → fulfill flow and makes the reference public", async () => {
-    const { accessToken: subjectToken, userId: subjectId } = await registerAndLogin("ref-flow-subject@nexora.dev");
-    const { accessToken: authorToken, userId: authorId } = await registerAndLogin("ref-flow-author@nexora.dev");
+    const { accessToken: subjectToken, userId: subjectId } = await registerAndLogin("ref-flow-subject@dentsocia.dev");
+    const { accessToken: authorToken, userId: authorId } = await registerAndLogin("ref-flow-author@dentsocia.dev");
 
     const requested = await request(app)
       .post("/api/v1/references/requests")
@@ -93,8 +93,8 @@ describe("Reference endpoints", () => {
   });
 
   it("allows writing a reference directly without a prior request", async () => {
-    const { userId: subjectId } = await registerAndLogin("ref-direct-subject@nexora.dev");
-    const { accessToken: authorToken } = await registerAndLogin("ref-direct-author@nexora.dev");
+    const { userId: subjectId } = await registerAndLogin("ref-direct-subject@dentsocia.dev");
+    const { accessToken: authorToken } = await registerAndLogin("ref-direct-author@dentsocia.dev");
 
     const response = await request(app)
       .post("/api/v1/references")
@@ -106,9 +106,9 @@ describe("Reference endpoints", () => {
   });
 
   it("rejects fulfilling someone else's pending request", async () => {
-    const { accessToken: subjectToken } = await registerAndLogin("ref-403-subject@nexora.dev");
-    const { userId: authorId } = await registerAndLogin("ref-403-author@nexora.dev");
-    const { accessToken: outsiderToken } = await registerAndLogin("ref-403-outsider@nexora.dev");
+    const { accessToken: subjectToken } = await registerAndLogin("ref-403-subject@dentsocia.dev");
+    const { userId: authorId } = await registerAndLogin("ref-403-author@dentsocia.dev");
+    const { accessToken: outsiderToken } = await registerAndLogin("ref-403-outsider@dentsocia.dev");
 
     const requested = await request(app)
       .post("/api/v1/references/requests")
@@ -124,8 +124,8 @@ describe("Reference endpoints", () => {
   });
 
   it("removes a reference from the public profile once its visibility is hidden", async () => {
-    const { accessToken: subjectToken, userId: subjectId } = await registerAndLogin("ref-hide-subject@nexora.dev");
-    const { accessToken: authorToken } = await registerAndLogin("ref-hide-author@nexora.dev");
+    const { accessToken: subjectToken, userId: subjectId } = await registerAndLogin("ref-hide-subject@dentsocia.dev");
+    const { accessToken: authorToken } = await registerAndLogin("ref-hide-author@dentsocia.dev");
 
     const written = await request(app)
       .post("/api/v1/references")

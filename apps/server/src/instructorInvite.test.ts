@@ -6,7 +6,7 @@ import request from "supertest";
 let mongoServer: MongoMemoryServer;
 let app: Express;
 
-const ADMIN_EMAIL = "admin@nexora.dev";
+const ADMIN_EMAIL = "admin@dentsocia.dev";
 
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
@@ -47,7 +47,7 @@ describe("Instructor invite endpoints", () => {
   });
 
   it("rejects requests without an access token", async () => {
-    const createRes = await request(app).post("/api/v1/admin/instructor-invites").send({ email: "x@nexora.dev" });
+    const createRes = await request(app).post("/api/v1/admin/instructor-invites").send({ email: "x@dentsocia.dev" });
     expect(createRes.status).toBe(401);
 
     const acceptRes = await request(app).post("/api/v1/instructor-invites/some-token/accept");
@@ -55,16 +55,16 @@ describe("Instructor invite endpoints", () => {
   });
 
   it("rejects a non-admin user creating an invite", async () => {
-    const { accessToken } = await registerAndLogin("not-admin@nexora.dev");
+    const { accessToken } = await registerAndLogin("not-admin@dentsocia.dev");
     const response = await request(app)
       .post("/api/v1/admin/instructor-invites")
       .set("Authorization", `Bearer ${accessToken}`)
-      .send({ email: "target@nexora.dev" });
+      .send({ email: "target@dentsocia.dev" });
     expect(response.status).toBe(403);
   });
 
   it("supports the full invite → accept flow and bumps kycLevel to 4", async () => {
-    const { accessToken: targetToken } = await registerAndLogin("invite-target@nexora.dev");
+    const { accessToken: targetToken } = await registerAndLogin("invite-target@dentsocia.dev");
 
     const before = await getKycLevel(targetToken);
     expect(before).toBe(0);
@@ -72,7 +72,7 @@ describe("Instructor invite endpoints", () => {
     const created = await request(app)
       .post("/api/v1/admin/instructor-invites")
       .set("Authorization", `Bearer ${adminToken}`)
-      .send({ email: "invite-target@nexora.dev" });
+      .send({ email: "invite-target@dentsocia.dev" });
     expect(created.status).toBe(201);
     expect(created.body.status).toBe("pending");
 
@@ -101,13 +101,13 @@ describe("Instructor invite endpoints", () => {
     const created = await request(app)
       .post("/api/v1/admin/instructor-invites")
       .set("Authorization", `Bearer ${adminToken}`)
-      .send({ email: "correct-recipient@nexora.dev" });
+      .send({ email: "correct-recipient@dentsocia.dev" });
 
     const { InstructorInviteModel } = await import("./models/InstructorInvite");
     const inviteDoc = await InstructorInviteModel.findById(created.body.id);
     const token = inviteDoc!.token;
 
-    const { accessToken: outsiderToken } = await registerAndLogin("wrong-recipient@nexora.dev");
+    const { accessToken: outsiderToken } = await registerAndLogin("wrong-recipient@dentsocia.dev");
     const response = await request(app)
       .post(`/api/v1/instructor-invites/${token}/accept`)
       .set("Authorization", `Bearer ${outsiderToken}`);
@@ -118,13 +118,13 @@ describe("Instructor invite endpoints", () => {
     const created = await request(app)
       .post("/api/v1/admin/instructor-invites")
       .set("Authorization", `Bearer ${adminToken}`)
-      .send({ email: "double-accept@nexora.dev" });
+      .send({ email: "double-accept@dentsocia.dev" });
 
     const { InstructorInviteModel } = await import("./models/InstructorInvite");
     const inviteDoc = await InstructorInviteModel.findById(created.body.id);
     const token = inviteDoc!.token;
 
-    const { accessToken: targetToken } = await registerAndLogin("double-accept@nexora.dev");
+    const { accessToken: targetToken } = await registerAndLogin("double-accept@dentsocia.dev");
     const first = await request(app)
       .post(`/api/v1/instructor-invites/${token}/accept`)
       .set("Authorization", `Bearer ${targetToken}`);

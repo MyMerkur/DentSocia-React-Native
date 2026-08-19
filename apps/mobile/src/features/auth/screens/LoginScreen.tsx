@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { getApiErrorMessage } from "@nexora/api-client";
-import { fontFamilies, radii, spacing, typographyPresets } from "@nexora/ui-tokens";
+import { getApiErrorMessage } from "@dentsocia/api-client";
+import { fontFamilies, radii, spacing, typographyPresets } from "@dentsocia/ui-tokens";
 import { useTheme } from "../../../store/useThemeStore";
 import { login, register } from "../../../services/authApi";
 import { useAuthStore } from "../../../store/useAuthStore";
@@ -72,7 +72,7 @@ export function LoginScreen() {
 
   return (
     <ScrollView contentContainerStyle={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[styles.title, { color: colors.accentGold }]}>NEXORA</Text>
+      <Text style={[styles.title, { color: colors.accentGold }]}>DENTSOCIA</Text>
 
       {mode === "login" ? (
         <>

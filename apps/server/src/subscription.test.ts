@@ -130,14 +130,14 @@ describe("Subscription endpoints", () => {
   });
 
   it("returns none status when a user has no subscription", async () => {
-    const { accessToken } = await registerAndLogin("sub-none@nexora.dev");
+    const { accessToken } = await registerAndLogin("sub-none@dentsocia.dev");
     const response = await request(app).get("/api/v1/subscriptions/status").set("Authorization", `Bearer ${accessToken}`);
     expect(response.status).toBe(200);
     expect(response.body.status).toBe("none");
   });
 
   it("rejects starting checkout when billing info has never been provided", async () => {
-    const { accessToken } = await registerAndLogin("sub-missing-billing@nexora.dev");
+    const { accessToken } = await registerAndLogin("sub-missing-billing@dentsocia.dev");
     const response = await request(app)
       .post("/api/v1/subscriptions/checkout")
       .set("Authorization", `Bearer ${accessToken}`)
@@ -152,7 +152,7 @@ describe("Subscription endpoints", () => {
       tokenExpireTime: 1800,
     });
 
-    const { accessToken } = await registerAndLogin("sub-checkout@nexora.dev");
+    const { accessToken } = await registerAndLogin("sub-checkout@dentsocia.dev");
     const response = await request(app)
       .post("/api/v1/subscriptions/checkout")
       .set("Authorization", `Bearer ${accessToken}`)
@@ -164,7 +164,7 @@ describe("Subscription endpoints", () => {
   });
 
   it("activates a subscription on a successful checkout callback", async () => {
-    const { accessToken } = await registerAndLogin("sub-callback@nexora.dev");
+    const { accessToken } = await registerAndLogin("sub-callback@dentsocia.dev");
     await activateSubscription(accessToken, "callback-1");
 
     const statusRes = await request(app).get("/api/v1/subscriptions/status").set("Authorization", `Bearer ${accessToken}`);
@@ -173,7 +173,7 @@ describe("Subscription endpoints", () => {
   });
 
   it("returns 409 when starting a checkout while already active", async () => {
-    const { accessToken } = await registerAndLogin("sub-already-active@nexora.dev");
+    const { accessToken } = await registerAndLogin("sub-already-active@dentsocia.dev");
     await activateSubscription(accessToken, "active-flow");
 
     const secondCheckout = await request(app)
@@ -184,7 +184,7 @@ describe("Subscription endpoints", () => {
   });
 
   it("processes a subscription webhook idempotently and only transitions state once per event", async () => {
-    const { accessToken } = await registerAndLogin("sub-webhook@nexora.dev");
+    const { accessToken } = await registerAndLogin("sub-webhook@dentsocia.dev");
     const { subscriptionReferenceCode, customerReferenceCode } = await activateSubscription(accessToken, "webhook-1");
 
     mockGetSubscriptionDetails.mockResolvedValueOnce({
@@ -227,7 +227,7 @@ describe("Subscription endpoints", () => {
   });
 
   it("rejects a webhook with an invalid signature without mutating any state", async () => {
-    const { accessToken } = await registerAndLogin("sub-webhook-badsig@nexora.dev");
+    const { accessToken } = await registerAndLogin("sub-webhook-badsig@dentsocia.dev");
     const { subscriptionReferenceCode, customerReferenceCode } = await activateSubscription(accessToken, "badsig-1");
 
     const webhookPayload = {
@@ -249,7 +249,7 @@ describe("Subscription endpoints", () => {
   });
 
   it("rejects a candidate role from checking out the clinic premium plan", async () => {
-    const { accessToken } = await registerAndLogin("sub-wrong-plan-candidate@nexora.dev", "hekim");
+    const { accessToken } = await registerAndLogin("sub-wrong-plan-candidate@dentsocia.dev", "hekim");
     const response = await request(app)
       .post("/api/v1/subscriptions/checkout")
       .set("Authorization", `Bearer ${accessToken}`)
@@ -258,7 +258,7 @@ describe("Subscription endpoints", () => {
   });
 
   it("rejects an employer role from checking out the individual teaser plan", async () => {
-    const { accessToken } = await registerAndLogin("sub-wrong-plan-employer@nexora.dev", "klinik");
+    const { accessToken } = await registerAndLogin("sub-wrong-plan-employer@dentsocia.dev", "klinik");
     const response = await request(app)
       .post("/api/v1/subscriptions/checkout")
       .set("Authorization", `Bearer ${accessToken}`)
@@ -268,7 +268,7 @@ describe("Subscription endpoints", () => {
 
   it("cancels an active subscription and returns 404 when nothing is left to cancel", async () => {
     mockCancelIyzicoSubscription.mockResolvedValueOnce(undefined);
-    const { accessToken } = await registerAndLogin("sub-cancel@nexora.dev");
+    const { accessToken } = await registerAndLogin("sub-cancel@dentsocia.dev");
     await activateSubscription(accessToken, "cancel-1");
 
     const cancelRes = await request(app).post("/api/v1/subscriptions/cancel").set("Authorization", `Bearer ${accessToken}`);

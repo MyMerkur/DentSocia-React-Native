@@ -43,7 +43,7 @@ describe("Job endpoints", () => {
   });
 
   it("rejects job creation for a non-employer role", async () => {
-    const { accessToken } = await registerAndLogin("job-non-employer@nexora.dev", "hekim");
+    const { accessToken } = await registerAndLogin("job-non-employer@dentsocia.dev", "hekim");
 
     const response = await request(app)
       .post("/api/v1/jobs")
@@ -54,7 +54,7 @@ describe("Job endpoints", () => {
   });
 
   it("rejects job creation for an employer role without Level 3 KYC", async () => {
-    const { accessToken } = await registerAndLogin("job-no-level3@nexora.dev", "klinik");
+    const { accessToken } = await registerAndLogin("job-no-level3@dentsocia.dev", "klinik");
 
     const response = await request(app)
       .post("/api/v1/jobs")
@@ -65,7 +65,7 @@ describe("Job endpoints", () => {
   });
 
   it("creates a job for an employer role with Level 3 KYC", async () => {
-    const { accessToken, userId } = await registerAndLogin("job-employer@nexora.dev", "klinik");
+    const { accessToken, userId } = await registerAndLogin("job-employer@dentsocia.dev", "klinik");
     await verifyOrgKyc(userId);
 
     const response = await request(app)
@@ -79,7 +79,7 @@ describe("Job endpoints", () => {
   });
 
   it("lists only open jobs, newest first", async () => {
-    const { accessToken, userId } = await registerAndLogin("job-feed@nexora.dev", "firma");
+    const { accessToken, userId } = await registerAndLogin("job-feed@dentsocia.dev", "firma");
     await verifyOrgKyc(userId);
 
     await request(app)
@@ -104,8 +104,8 @@ describe("Job endpoints", () => {
   });
 
   it("only allows the job owner to change its status", async () => {
-    const { accessToken: ownerToken, userId: ownerId } = await registerAndLogin("job-owner@nexora.dev", "dernek");
-    const { accessToken: otherToken } = await registerAndLogin("job-other@nexora.dev", "klinik");
+    const { accessToken: ownerToken, userId: ownerId } = await registerAndLogin("job-owner@dentsocia.dev", "dernek");
+    const { accessToken: otherToken } = await registerAndLogin("job-other@dentsocia.dev", "klinik");
     await verifyOrgKyc(ownerId);
 
     const created = await request(app)
@@ -122,7 +122,7 @@ describe("Job endpoints", () => {
   });
 
   it("returns the employer's own jobs regardless of status", async () => {
-    const { accessToken, userId } = await registerAndLogin("job-mine@nexora.dev", "klinik");
+    const { accessToken, userId } = await registerAndLogin("job-mine@dentsocia.dev", "klinik");
     await verifyOrgKyc(userId);
 
     await request(app).post("/api/v1/jobs").set("Authorization", `Bearer ${accessToken}`).send({ title: "İlan A" });
@@ -134,7 +134,7 @@ describe("Job endpoints", () => {
   });
 
   it("allows the first 3 job posts for free, then requires a credit or premium subscription", async () => {
-    const { accessToken, userId } = await registerAndLogin("job-limit@nexora.dev", "klinik");
+    const { accessToken, userId } = await registerAndLogin("job-limit@dentsocia.dev", "klinik");
     await verifyOrgKyc(userId);
 
     for (let i = 0; i < 3; i += 1) {
@@ -171,7 +171,7 @@ describe("Job endpoints", () => {
   });
 
   it("does not allow concurrent requests to over-consume the free-post quota or credit balance", async () => {
-    const { accessToken, userId } = await registerAndLogin("job-race@nexora.dev", "klinik");
+    const { accessToken, userId } = await registerAndLogin("job-race@dentsocia.dev", "klinik");
     await verifyOrgKyc(userId);
 
     const { UserModel } = await import("./models/User");
@@ -202,7 +202,7 @@ describe("Job endpoints", () => {
   });
 
   it("allows unlimited job posts with an active clinic_premium_monthly subscription", async () => {
-    const { accessToken, userId } = await registerAndLogin("job-premium@nexora.dev", "klinik");
+    const { accessToken, userId } = await registerAndLogin("job-premium@dentsocia.dev", "klinik");
     await verifyOrgKyc(userId);
 
     for (let i = 0; i < 3; i += 1) {

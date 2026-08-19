@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { fontFamilies, radii, spacing } from "@nexora/ui-tokens";
+import { fontFamilies, radii, spacing } from "@dentsocia/ui-tokens";
 import { useTheme } from "../store/useThemeStore";
 import { Button } from "./Button";
 

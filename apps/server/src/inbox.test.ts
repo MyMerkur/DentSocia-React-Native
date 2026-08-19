@@ -38,8 +38,8 @@ describe("Inbox endpoints", () => {
   });
 
   it("starts a thread and assigns the category from the context type", async () => {
-    const { accessToken } = await registerAndLogin("inbox-starter@nexora.dev");
-    const { userId: targetId } = await registerAndLogin("inbox-target@nexora.dev");
+    const { accessToken } = await registerAndLogin("inbox-starter@dentsocia.dev");
+    const { userId: targetId } = await registerAndLogin("inbox-target@dentsocia.dev");
 
     const response = await request(app)
       .post("/api/v1/inbox/threads")
@@ -52,8 +52,8 @@ describe("Inbox endpoints", () => {
   });
 
   it("defaults to the general category when no context is given", async () => {
-    const { accessToken } = await registerAndLogin("inbox-general-a@nexora.dev");
-    const { userId: targetId } = await registerAndLogin("inbox-general-b@nexora.dev");
+    const { accessToken } = await registerAndLogin("inbox-general-a@dentsocia.dev");
+    const { userId: targetId } = await registerAndLogin("inbox-general-b@dentsocia.dev");
 
     const response = await request(app)
       .post("/api/v1/inbox/threads")
@@ -65,8 +65,8 @@ describe("Inbox endpoints", () => {
   });
 
   it("returns the same thread on a second start between the same two users", async () => {
-    const { accessToken } = await registerAndLogin("inbox-dedupe-a@nexora.dev");
-    const { userId: targetId } = await registerAndLogin("inbox-dedupe-b@nexora.dev");
+    const { accessToken } = await registerAndLogin("inbox-dedupe-a@dentsocia.dev");
+    const { userId: targetId } = await registerAndLogin("inbox-dedupe-b@dentsocia.dev");
 
     const first = await request(app)
       .post("/api/v1/inbox/threads")
@@ -82,7 +82,7 @@ describe("Inbox endpoints", () => {
   });
 
   it("rejects starting a thread with yourself", async () => {
-    const { accessToken, userId } = await registerAndLogin("inbox-self@nexora.dev");
+    const { accessToken, userId } = await registerAndLogin("inbox-self@dentsocia.dev");
 
     const response = await request(app)
       .post("/api/v1/inbox/threads")
@@ -93,8 +93,8 @@ describe("Inbox endpoints", () => {
   });
 
   it("sends and lists messages within a thread", async () => {
-    const { accessToken: senderToken } = await registerAndLogin("inbox-msg-sender@nexora.dev");
-    const { accessToken: recipientToken, userId: recipientId } = await registerAndLogin("inbox-msg-recipient@nexora.dev");
+    const { accessToken: senderToken } = await registerAndLogin("inbox-msg-sender@dentsocia.dev");
+    const { accessToken: recipientToken, userId: recipientId } = await registerAndLogin("inbox-msg-recipient@dentsocia.dev");
 
     const thread = await request(app)
       .post("/api/v1/inbox/threads")
@@ -119,9 +119,9 @@ describe("Inbox endpoints", () => {
   });
 
   it("rejects sending a message from a non-participant", async () => {
-    const { accessToken: senderToken } = await registerAndLogin("inbox-nonpart-sender@nexora.dev");
-    const { userId: recipientId } = await registerAndLogin("inbox-nonpart-recipient@nexora.dev");
-    const { accessToken: outsiderToken } = await registerAndLogin("inbox-nonpart-outsider@nexora.dev");
+    const { accessToken: senderToken } = await registerAndLogin("inbox-nonpart-sender@dentsocia.dev");
+    const { userId: recipientId } = await registerAndLogin("inbox-nonpart-recipient@dentsocia.dev");
+    const { accessToken: outsiderToken } = await registerAndLogin("inbox-nonpart-outsider@dentsocia.dev");
 
     const thread = await request(app)
       .post("/api/v1/inbox/threads")
@@ -137,8 +137,8 @@ describe("Inbox endpoints", () => {
   });
 
   it("marks messages as read when the recipient lists them, and reflects it in unread counts", async () => {
-    const { accessToken: senderToken } = await registerAndLogin("inbox-read-sender@nexora.dev");
-    const { accessToken: recipientToken, userId: recipientId } = await registerAndLogin("inbox-read-recipient@nexora.dev");
+    const { accessToken: senderToken } = await registerAndLogin("inbox-read-sender@dentsocia.dev");
+    const { accessToken: recipientToken, userId: recipientId } = await registerAndLogin("inbox-read-recipient@dentsocia.dev");
 
     const thread = await request(app)
       .post("/api/v1/inbox/threads")
@@ -166,8 +166,8 @@ describe("Inbox endpoints", () => {
   });
 
   it("lists threads for a user with unread counts", async () => {
-    const { accessToken: senderToken } = await registerAndLogin("inbox-list-sender@nexora.dev");
-    const { accessToken: recipientToken, userId: recipientId } = await registerAndLogin("inbox-list-recipient@nexora.dev");
+    const { accessToken: senderToken } = await registerAndLogin("inbox-list-sender@dentsocia.dev");
+    const { accessToken: recipientToken, userId: recipientId } = await registerAndLogin("inbox-list-recipient@dentsocia.dev");
 
     const thread = await request(app)
       .post("/api/v1/inbox/threads")

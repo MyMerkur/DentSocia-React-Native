@@ -1,4 +1,4 @@
-import { CANDIDATE_ROLES } from "@nexora/shared-constants";
+import { CANDIDATE_ROLES } from "@dentsocia/shared-constants";
 import { findUserById } from "../repositories/user.repository";
 import {
   createRequest,

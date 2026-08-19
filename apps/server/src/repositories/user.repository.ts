@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { CANDIDATE_ROLES } from "@nexora/shared-constants";
+import { CANDIDATE_ROLES } from "@dentsocia/shared-constants";
 import { UserModel, type User } from "../models/User";
 
 export async function findUserByEmail(email: string) {

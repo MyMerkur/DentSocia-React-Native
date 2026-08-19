@@ -10,8 +10,8 @@ import {
   View,
 } from "react-native";
 import { MessageCircle } from "lucide-react-native";
-import { getApiErrorMessage } from "@nexora/api-client";
-import { radii, spacing, typography } from "@nexora/ui-tokens";
+import { getApiErrorMessage } from "@dentsocia/api-client";
+import { radii, spacing, typography } from "@dentsocia/ui-tokens";
 import { useTheme } from "../../../store/useThemeStore";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { getSocket } from "../../../services/socket";

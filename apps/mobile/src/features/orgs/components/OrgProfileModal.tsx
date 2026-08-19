@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View, type ViewStyle } from "react-native";
-import { getApiErrorMessage } from "@nexora/api-client";
-import { EMPLOYER_ROLES } from "@nexora/shared-constants";
-import { radii, spacing, typography, type ThemeColors } from "@nexora/ui-tokens";
+import { getApiErrorMessage } from "@dentsocia/api-client";
+import { EMPLOYER_ROLES } from "@dentsocia/shared-constants";
+import { radii, spacing, typography, type ThemeColors } from "@dentsocia/ui-tokens";
 import { useTheme } from "../../../store/useThemeStore";
 import { ModalShell } from "../../../components/ModalShell";
 import { Avatar } from "../../../components/Avatar";

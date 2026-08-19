@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MICRO_COMPETENCY_TAGS } from "@nexora/shared-constants";
+import { MICRO_COMPETENCY_TAGS } from "@dentsocia/shared-constants";
 import { JOB_STATUSES } from "../models/Job";
 
 export const createJobSchema = z
