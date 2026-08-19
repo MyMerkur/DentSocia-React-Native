@@ -77,9 +77,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.nexora.mobile"
+    namespace "com.dentsocia.mobile"
     defaultConfig {
-        applicationId "com.nexora.mobile"
+        applicationId "com.dentsocia.mobile"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

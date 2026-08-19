@@ -1,4 +1,4 @@
-package com.nexora.mobile
+package com.dentsocia.mobile
 
 import android.app.Application
 import com.facebook.react.PackageList
