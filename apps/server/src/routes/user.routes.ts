@@ -8,6 +8,7 @@ import {
   updateAffiliationHandler,
   requestAffiliationHandler,
   listMyAffiliationRequestsHandler,
+  deleteAccountHandler,
 } from "../controllers/user.controller";
 
 export const userRouter = Router();
@@ -20,3 +21,4 @@ userRouter.post("/users/me/avatar-upload-url", avatarUploadUrlHandler);
 userRouter.patch("/users/me/affiliation", updateAffiliationHandler);
 userRouter.post("/users/me/affiliation-requests", requestAffiliationHandler);
 userRouter.get("/users/me/affiliation-requests", listMyAffiliationRequestsHandler);
+userRouter.delete("/users/me", deleteAccountHandler);
