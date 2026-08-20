@@ -8,7 +8,7 @@ import { Avatar } from "../../../components/Avatar";
 import { Badge } from "../../../components/Badge";
 import { EmptyState } from "../../../components/EmptyState";
 import { SkeletonRow } from "../../../components/Skeleton";
-import { getJobApplications, updateApplicationStatus, type JobApplicantItem, type JobItem } from "../../../services/jobApi";
+import { getJobApplications, updateApplicationStatus, markJobFilled, type JobApplicantItem, type JobItem } from "../../../services/jobApi";
 import { statusLabel, statusBadgeVariant } from "../statusStyles";
 import { InboxModal } from "../../inbox/components/InboxModal";
 import { UserProfileModal } from "../../profiles/components/UserProfileModal";
@@ -30,6 +30,7 @@ export function ApplicantsModal({ visible, job, onClose }: ApplicantsModalProps)
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [messageTargetId, setMessageTargetId] = useState<string | null>(null);
   const [profileTargetId, setProfileTargetId] = useState<string | null>(null);
+  const [fillingId, setFillingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!visible || !job) {
@@ -52,6 +53,21 @@ export function ApplicantsModal({ visible, job, onClose }: ApplicantsModalProps)
       setError(getApiErrorMessage(err, "Güncellenemedi"));
     } finally {
       setUpdatingId(null);
+    }
+  }
+
+  async function handleMarkFilled(applicationId: string) {
+    if (!job) {
+      return;
+    }
+    setFillingId(applicationId);
+    try {
+      await markJobFilled(job.id, applicationId);
+      onClose();
+    } catch (err) {
+      setError(getApiErrorMessage(err, "Pozisyon doldu olarak işaretlenemedi"));
+    } finally {
+      setFillingId(null);
     }
   }
 
@@ -109,6 +125,17 @@ export function ApplicantsModal({ visible, job, onClose }: ApplicantsModalProps)
                           <Text style={[styles.rejectButtonText, { color: colors.danger }]}>Reddet</Text>
                         </TouchableOpacity>
                       </View>
+                    ) : null}
+                    {applicant.status === "accepted" && job?.status === "open" ? (
+                      <TouchableOpacity
+                        style={[styles.acceptButton, styles.fillButton, { backgroundColor: colors.accentGold }]}
+                        onPress={() => handleMarkFilled(applicant.id)}
+                        disabled={fillingId === applicant.id}
+                      >
+                        <Text style={[styles.acceptButtonText, { color: colors.background }]}>
+                          Pozisyon Doldu — Bu Adayı İşe Aldım
+                        </Text>
+                      </TouchableOpacity>
                     ) : null}
                   </View>
                 </View>
@@ -188,6 +215,10 @@ const styles = StyleSheet.create({
   acceptButtonText: {
     fontSize: typography.sizes.xs,
     fontWeight: typography.weights.semibold,
+  },
+  fillButton: {
+    marginTop: spacing.sm,
+    alignSelf: "flex-start",
   },
   rejectButton: {
     borderRadius: radii.pill,

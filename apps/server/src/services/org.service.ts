@@ -8,6 +8,7 @@ import { createDownloadUrl } from "../config/storage";
 import { resolveUserSummary } from "../utils/userSummary";
 import { getOrgRatingSummary } from "./clinicReview.service";
 import { hasActiveSubscription } from "./subscription.service";
+import { getEmployerStats } from "./postHireVerification.service";
 import { HttpError } from "../utils/httpError";
 
 export async function searchOrgs(query: string) {
@@ -50,6 +51,7 @@ export async function getOrgProfile(orgUserId: string) {
   const teamMemberIds = teamMembers.map((member) => member._id);
   const cases = await listRecentCasesByUsers([orgObjectId, ...teamMemberIds], 10);
   const rating = await getOrgRatingSummary(orgUserId);
+  const postHireVerificationStats = await getEmployerStats(orgUserId);
   const isPremium = await hasActiveSubscription(orgUserId);
   const recentCases = await Promise.all(
     cases.map(async (caseDoc) => ({
@@ -76,5 +78,6 @@ export async function getOrgProfile(orgUserId: string) {
     openJobs,
     recentCases,
     rating,
+    postHireVerificationStats,
   };
 }

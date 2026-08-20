@@ -35,6 +35,12 @@ export interface OrgRating {
   count: number;
 }
 
+export interface PostHireVerificationStats {
+  pendingCount: number;
+  yesCount: number;
+  noCount: number;
+}
+
 export interface OrgReview {
   id: string;
   rating: number;
@@ -58,6 +64,7 @@ export interface OrgProfile {
   openJobs: OrgOpenJob[];
   recentCases: OrgRecentCase[];
   rating: OrgRating;
+  postHireVerificationStats: PostHireVerificationStats;
 }
 
 export interface OrgAnnouncement {
