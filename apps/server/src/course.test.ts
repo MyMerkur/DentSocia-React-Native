@@ -44,6 +44,7 @@ async function createCourse(accessToken: string, title = "Endodontide İleri Tek
   return response.body.id as string;
 }
 
+// FEATURE_FLAGS.instructorEconomy=false gates this whole router — see packages/shared-constants/src/featureFlags.ts
 describe("Course/Enrollment/Certificate endpoints", () => {
   it("rejects requests without an access token", async () => {
     expect((await request(app).post("/api/v1/courses").send({ title: "x" })).status).toBe(401);
@@ -51,7 +52,7 @@ describe("Course/Enrollment/Certificate endpoints", () => {
     expect((await request(app).get("/api/v1/enrollments/mine")).status).toBe(401);
   });
 
-  it("rejects course creation for a non-instructor", async () => {
+  it.skip("rejects course creation for a non-instructor", async () => {
     const { accessToken } = await registerAndLogin("course-non-instructor@dentsocia.dev");
     const response = await request(app)
       .post("/api/v1/courses")
@@ -60,7 +61,7 @@ describe("Course/Enrollment/Certificate endpoints", () => {
     expect(response.status).toBe(403);
   });
 
-  it("creates and lists courses for an instructor", async () => {
+  it.skip("creates and lists courses for an instructor", async () => {
     const { accessToken, userId } = await registerAndLogin("course-instructor@dentsocia.dev");
     await setKycLevel(userId, 4);
 
@@ -77,7 +78,7 @@ describe("Course/Enrollment/Certificate endpoints", () => {
     expect(mine.body.courses).toHaveLength(1);
   });
 
-  it("rejects enrollment for a user below kycLevel 1", async () => {
+  it.skip("rejects enrollment for a user below kycLevel 1", async () => {
     const { accessToken: instructorToken, userId: instructorId } = await registerAndLogin("course-enroll-instructor@dentsocia.dev");
     await setKycLevel(instructorId, 4);
     const courseId = await createCourse(instructorToken);
@@ -89,7 +90,7 @@ describe("Course/Enrollment/Certificate endpoints", () => {
     expect(response.status).toBe(403);
   });
 
-  it("rejects an instructor enrolling in their own course", async () => {
+  it.skip("rejects an instructor enrolling in their own course", async () => {
     const { accessToken, userId } = await registerAndLogin("course-self-enroll@dentsocia.dev");
     await setKycLevel(userId, 4);
     const courseId = await createCourse(accessToken);
@@ -100,7 +101,7 @@ describe("Course/Enrollment/Certificate endpoints", () => {
     expect(response.status).toBe(400);
   });
 
-  it("rejects duplicate enrollment", async () => {
+  it.skip("rejects duplicate enrollment", async () => {
     const { accessToken: instructorToken, userId: instructorId } = await registerAndLogin("course-dup-instructor@dentsocia.dev");
     await setKycLevel(instructorId, 4);
     const courseId = await createCourse(instructorToken);
@@ -119,7 +120,7 @@ describe("Course/Enrollment/Certificate endpoints", () => {
     expect(second.status).toBe(409);
   });
 
-  it("rejects a non-owner from viewing or completing enrollments", async () => {
+  it.skip("rejects a non-owner from viewing or completing enrollments", async () => {
     const { accessToken: instructorToken, userId: instructorId } = await registerAndLogin("course-owner-instructor@dentsocia.dev");
     await setKycLevel(instructorId, 4);
     const courseId = await createCourse(instructorToken);
@@ -138,7 +139,7 @@ describe("Course/Enrollment/Certificate endpoints", () => {
     expect(completeRes.status).toBe(403);
   });
 
-  it("supports the full enroll -> complete -> certificate -> verify flow", async () => {
+  it.skip("supports the full enroll -> complete -> certificate -> verify flow", async () => {
     const { accessToken: instructorToken, userId: instructorId } = await registerAndLogin("course-flow-instructor@dentsocia.dev");
     await setKycLevel(instructorId, 4);
     const courseId = await createCourse(instructorToken);

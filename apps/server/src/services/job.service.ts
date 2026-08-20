@@ -13,6 +13,7 @@ import {
   decrementJobCreditsBalanceIfSufficient,
 } from "../repositories/user.repository";
 import { hasActiveSubscription } from "./subscription.service";
+import { FEATURE_FLAGS } from "@dentsocia/shared-constants";
 import { EMPLOYER_ROLES, type JobStatus } from "../models/Job";
 import { HttpError } from "../utils/httpError";
 import { resolveUserSummary, type UserSummary, type UserSummarySource } from "../utils/userSummary";
@@ -57,19 +58,24 @@ export async function createJob(userId: string, input: CreateJobBody) {
     throw new HttpError("İlan yayınlamak için kurumsal doğrulama (Level 3) gerekli", 403);
   }
 
-  // Both the free-post quota and the paid-credit balance are consumed via atomic guarded
-  // updates (findOneAndUpdate with a $lt/$gte condition), not read-then-write — this closes a
-  // race where concurrent requests could each pass a stale check and over-consume the quota.
-  const hasPremium = await hasActiveSubscription(userId);
-  if (!hasPremium) {
-    const freeSlotConsumed = await consumeFreeJobPostSlotIfAvailable(userId, FREE_JOB_POST_LIMIT);
-    if (!freeSlotConsumed) {
-      const creditConsumed = await decrementJobCreditsBalanceIfSufficient(userId, 1);
-      if (!creditConsumed) {
-        throw new HttpError(
-          "İlan hakkınız kalmadı. Alakart ilan kredisi satın alın veya premium abone olun.",
-          402,
-        );
+  // Job-post quota/credit is a monetization mechanic (PRD v3 §5.2: "Faz 1'de kimseden para
+  // alınmıyor") — skip it entirely while payments are off, otherwise employers would hit an
+  // unpayable 402 after FREE_JOB_POST_LIMIT with no checkout route to resolve it.
+  if (FEATURE_FLAGS.payments) {
+    // Both the free-post quota and the paid-credit balance are consumed via atomic guarded
+    // updates (findOneAndUpdate with a $lt/$gte condition), not read-then-write — this closes a
+    // race where concurrent requests could each pass a stale check and over-consume the quota.
+    const hasPremium = await hasActiveSubscription(userId);
+    if (!hasPremium) {
+      const freeSlotConsumed = await consumeFreeJobPostSlotIfAvailable(userId, FREE_JOB_POST_LIMIT);
+      if (!freeSlotConsumed) {
+        const creditConsumed = await decrementJobCreditsBalanceIfSufficient(userId, 1);
+        if (!creditConsumed) {
+          throw new HttpError(
+            "İlan hakkınız kalmadı. Alakart ilan kredisi satın alın veya premium abone olun.",
+            402,
+          );
+        }
       }
     }
   }

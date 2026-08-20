@@ -1,3 +1,5 @@
+export * from "./featureFlags";
+
 export const MICRO_COMPETENCY_TAGS = [
   "Endodonti",
   "Ortodonti",

@@ -7,8 +7,10 @@ import { BlurView } from "@react-native-community/blur";
 import { House, Users, CirclePlus, Briefcase, User, Menu } from "lucide-react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { duration, elevation, iconSizes, iconStrokeWidth, radii } from "@dentsocia/ui-tokens";
+import { FEATURE_FLAGS } from "@dentsocia/shared-constants";
 import { ProfileScreen } from "../features/profile/screens/ProfileScreen";
 import { FeedScreen } from "../features/feed/screens/FeedScreen";
+import { AnnouncementFeedScreen } from "../features/feed/screens/AnnouncementFeedScreen";
 import { HubsScreen } from "../features/hubs/screens/HubsScreen";
 import { CreateCaseScreen } from "../features/cases/screens/CreateCaseScreen";
 import { CareerScreen } from "../features/jobs/screens/CareerScreen";
@@ -193,7 +195,7 @@ export function MainTabNavigator() {
     >
       <Tab.Screen
         name="Feed"
-        component={FeedScreen}
+        component={FEATURE_FLAGS.socialFeed ? FeedScreen : AnnouncementFeedScreen}
         options={{
           title: "Ana Sayfa",
           tabBarIcon: FeedTabIcon,
