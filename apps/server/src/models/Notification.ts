@@ -28,6 +28,7 @@ export const NOTIFICATION_TYPES = [
   "affiliation_requested",
   "affiliation_approved",
   "affiliation_rejected",
+  "saved_search_match",
 ] as const;
 export type NotificationType = (typeof NOTIFICATION_TYPES)[number];
 
