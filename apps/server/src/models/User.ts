@@ -60,6 +60,8 @@ const userSchema = new Schema(
     sniperCreditsBalance: { type: Number, default: 0 },
     failedLoginAttempts: { type: Number, default: 0 },
     lockedUntil: { type: Date, default: null },
+    status: { type: String, enum: ["active", "deleted"], default: "active" },
+    deletedAt: { type: Date, default: null },
     showcase: { type: showcaseSchema, default: () => ({}) },
     career: { type: careerSchema, default: () => ({}) },
     billingInfo: { type: billingInfoSchema, default: () => ({}) },

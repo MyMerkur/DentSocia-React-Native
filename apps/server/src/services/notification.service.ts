@@ -262,3 +262,9 @@ export async function notifyPostHireVerificationDue(candidateId: string, jobTitl
   const body = `"${jobTitle}" ilanı üzerinden işe girmiştiniz, kısa bir doğrulama sorumuzu yanıtlar mısınız?`;
   await createNotification(candidateId, "post_hire_verification_due", title, body);
 }
+
+export async function notifySavedSearchMatch(userId: string, jobTitle: string) {
+  const title = "Kayıtlı aramanla eşleşen yeni ilan";
+  const body = `"${jobTitle}" ilanı, kaydettiğin arama kriterleriyle eşleşiyor`;
+  await createNotification(userId, "saved_search_match", title, body);
+}

@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { randomUUID } from "crypto";
 import { env } from "./env";
@@ -55,6 +55,12 @@ export async function createDownloadUrl(key: string): Promise<string> {
   ensureStorageConfigured();
   const command = new GetObjectCommand({ Bucket: env.R2_BUCKET, Key: key });
   return getSignedUrl(getClient(), command, { expiresIn: DOWNLOAD_URL_TTL_SECONDS });
+}
+
+export async function deleteObject(key: string): Promise<void> {
+  ensureStorageConfigured();
+  const command = new DeleteObjectCommand({ Bucket: env.R2_BUCKET, Key: key });
+  await getClient().send(command);
 }
 
 export async function downloadObject(key: string): Promise<{ buffer: Buffer; contentType: string }> {

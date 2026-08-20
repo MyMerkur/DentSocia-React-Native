@@ -30,6 +30,7 @@ export const NOTIFICATION_TYPES = [
   "affiliation_rejected",
   "job_expiry_reminder",
   "post_hire_verification_due",
+  "saved_search_match",
 ] as const;
 export type NotificationType = (typeof NOTIFICATION_TYPES)[number];
 

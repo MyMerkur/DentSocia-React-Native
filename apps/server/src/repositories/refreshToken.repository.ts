@@ -12,3 +12,7 @@ export async function findValidByHash(tokenHash: string) {
 export async function revokeByHash(tokenHash: string) {
   return RefreshTokenModel.updateOne({ tokenHash }, { revokedAt: new Date() });
 }
+
+export async function revokeAllForUser(userId: Types.ObjectId) {
+  return RefreshTokenModel.updateMany({ userId, revokedAt: null }, { revokedAt: new Date() });
+}
