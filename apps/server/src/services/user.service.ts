@@ -1,6 +1,7 @@
 import { findUserById } from "../repositories/user.repository";
 import { buildAvatarStorageKey, createDownloadUrl, createUploadUrl } from "../config/storage";
 import { HttpError } from "../utils/httpError";
+import { env } from "../config/env";
 import { EMPLOYER_ROLES } from "@dentsocia/shared-constants";
 import type { updateCareerSchema, updateShowcaseSchema } from "../validators/user.validator";
 import type { z } from "zod";
@@ -29,6 +30,7 @@ export async function getMe(userId: string) {
     email: user.email,
     role: user.role,
     kycLevel: user.kycLevel,
+    isAdmin: env.ADMIN_EMAILS.includes(user.email),
     showcase: {
       displayName: user.showcase.displayName,
       title: user.showcase.title,

@@ -1,6 +1,6 @@
 import type { Response, NextFunction } from "express";
 import type { AuthenticatedRequest } from "../middlewares/auth";
-import { uploadUrlSchema, confirmUploadSchema } from "../validators/kyc.validator";
+import { uploadUrlSchema, confirmUploadSchema, reviewDocumentSchema } from "../validators/kyc.validator";
 import * as kycService from "../services/kyc.service";
 
 export async function requestUploadUrlHandler(req: AuthenticatedRequest, res: Response, next: NextFunction) {
@@ -38,6 +38,25 @@ export async function listDocumentsHandler(req: AuthenticatedRequest, res: Respo
         createdAt: doc.createdAt,
       })),
     });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function listPendingDocumentsHandler(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  try {
+    const documents = await kycService.listPendingDocuments();
+    res.status(200).json({ documents });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function reviewDocumentHandler(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  try {
+    const { decision, note } = reviewDocumentSchema.parse(req.body);
+    const result = await kycService.reviewDocument(req.user!.id, req.params.documentId!, decision, note);
+    res.status(200).json(result);
   } catch (error) {
     next(error);
   }

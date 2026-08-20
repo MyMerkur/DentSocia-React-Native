@@ -30,6 +30,8 @@ function mockOcrResponse(extraction: Record<string, unknown>) {
 let mongoServer: MongoMemoryServer;
 let app: Express;
 
+const ADMIN_EMAIL = "kyc-admin@dentsocia.dev";
+
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   process.env.ATLAS_URI_DEV = mongoServer.getUri();
@@ -42,6 +44,7 @@ beforeAll(async () => {
   process.env.R2_SECRET_KEY = "test-secret-key";
   process.env.R2_BUCKET = "test-bucket";
   process.env.ANTHROPIC_API_KEY = "test-anthropic-key";
+  process.env.ADMIN_EMAILS = ADMIN_EMAIL;
 
   const { connectDB } = await import("./config/db");
   await connectDB();
@@ -74,6 +77,27 @@ async function registerAndLogin(email: string) {
 async function registerAndLoginWithRole(email: string, role: string) {
   const response = await request(app).post("/api/v1/auth/register").send({ email, password: "Supersecret123", role });
   return { accessToken: response.body.accessToken as string, userId: response.body.user.id as string };
+}
+
+async function getAdminToken() {
+  const response = await request(app)
+    .post("/api/v1/auth/login")
+    .send({ email: ADMIN_EMAIL, password: "Supersecret123" });
+  if (response.status === 200) {
+    return response.body.accessToken as string;
+  }
+  const { accessToken } = await registerAndLogin(ADMIN_EMAIL);
+  return accessToken;
+}
+
+// Testler paylaşılan bir Mongo örneğini kullandığı için kuyrukta başka testlerden kalma
+// belgeler de olabilir — bu yüzden her zaman çağıranın bildiği spesifik documentId'yi
+// hedef alıyoruz, "kuyruktaki ilk belge" gibi kırılgan bir varsayıma dayanmıyoruz.
+async function reviewDocument(adminToken: string, documentId: string, decision: "approved" | "rejected") {
+  return request(app)
+    .post(`/api/v1/kyc/documents/${documentId}/review`)
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send({ decision });
 }
 
 describe("KYC endpoints", () => {
@@ -112,7 +136,7 @@ describe("KYC endpoints", () => {
     expect(response.status).toBe(400);
   });
 
-  it("approves a legible, name-matching kimlik document and raises kycLevel to 1", async () => {
+  it("queues a legible, name-matching kimlik upload as pending with the AI's pre-screening signal — it does not decide", async () => {
     const { accessToken, userId } = await registerAndLogin("kyc-approve@dentsocia.dev");
     mockOcrResponse({
       isLegible: true,
@@ -134,16 +158,19 @@ describe("KYC endpoints", () => {
       });
 
     expect(response.status).toBe(201);
-    expect(response.body.status).toBe("approved");
+    expect(response.body.status).toBe("pending");
 
     const listResponse = await request(app)
       .get("/api/v1/kyc/documents")
       .set("Authorization", `Bearer ${accessToken}`);
     expect(listResponse.body.documents).toHaveLength(1);
-    expect(listResponse.body.documents[0].status).toBe("approved");
+    expect(listResponse.body.documents[0].status).toBe("pending");
+
+    const profileResponse = await request(app).get("/api/v1/users/me").set("Authorization", `Bearer ${accessToken}`);
+    expect(profileResponse.body.kycLevel).toBe(0);
   });
 
-  it("rejects a document when the extracted name does not match the claim", async () => {
+  it("still queues as pending even when the extracted name does not match the claim — AI flags it, doesn't reject it", async () => {
     const { accessToken, userId } = await registerAndLogin("kyc-mismatch@dentsocia.dev");
     mockOcrResponse({
       isLegible: true,
@@ -165,10 +192,15 @@ describe("KYC endpoints", () => {
       });
 
     expect(response.status).toBe(201);
-    expect(response.body.status).toBe("rejected");
+    expect(response.body.status).toBe("pending");
+
+    const adminToken = await getAdminToken();
+    const pending = await request(app).get("/api/v1/kyc/documents/pending").set("Authorization", `Bearer ${adminToken}`);
+    const queued = pending.body.documents.find((doc: { id: string }) => doc.id === response.body.id);
+    expect(queued.aiNameMatches).toBe(false);
   });
 
-  it("marks a low-confidence or illegible document as needs_review", async () => {
+  it("surfaces a low aiConfidence signal for an illegible document, still queued as pending", async () => {
     const { accessToken, userId } = await registerAndLogin("kyc-blurry@dentsocia.dev");
     mockOcrResponse({
       isLegible: false,
@@ -190,7 +222,63 @@ describe("KYC endpoints", () => {
       });
 
     expect(response.status).toBe(201);
-    expect(response.body.status).toBe("needs_review");
+    expect(response.body.status).toBe("pending");
+
+    const adminToken = await getAdminToken();
+    const pending = await request(app).get("/api/v1/kyc/documents/pending").set("Authorization", `Bearer ${adminToken}`);
+    const queued = pending.body.documents.find((doc: { id: string }) => doc.id === response.body.id);
+    expect(queued.aiConfidence).toBe("low");
+  });
+
+  it("rejects a non-admin listing or reviewing the pending queue", async () => {
+    const { accessToken } = await registerAndLogin("kyc-not-admin@dentsocia.dev");
+
+    const listResponse = await request(app).get("/api/v1/kyc/documents/pending").set("Authorization", `Bearer ${accessToken}`);
+    expect(listResponse.status).toBe(403);
+
+    const reviewResponse = await request(app)
+      .post("/api/v1/kyc/documents/000000000000000000000000/review")
+      .set("Authorization", `Bearer ${accessToken}`)
+      .send({ decision: "approved" });
+    expect(reviewResponse.status).toBe(403);
+  });
+
+  it("rejects a document via admin review and does not raise kycLevel; a second review 404s", async () => {
+    const { accessToken, userId } = await registerAndLogin("kyc-admin-reject@dentsocia.dev");
+    mockOcrResponse({
+      isLegible: true,
+      extractedFullName: "Ada Lovelace",
+      documentNumber: "12345",
+      nameMatchesUser: true,
+      confidence: "high",
+      notes: "Belge net",
+    });
+    const created = await request(app)
+      .post("/api/v1/kyc/documents")
+      .set("Authorization", `Bearer ${accessToken}`)
+      .send({
+        documentType: "kimlik",
+        storageKey: `kyc/${userId}/kimlik/fake.jpeg`,
+        contentType: "image/jpeg",
+        claimedFullName: "Ada Lovelace",
+      });
+
+    const adminToken = await getAdminToken();
+    const rejected = await reviewDocument(adminToken, created.body.id, "rejected");
+    expect(rejected.status).toBe(200);
+    expect(rejected.body.status).toBe("rejected");
+
+    const profileResponse = await request(app).get("/api/v1/users/me").set("Authorization", `Bearer ${accessToken}`);
+    expect(profileResponse.body.kycLevel).toBe(0);
+
+    const pendingAfter = await request(app).get("/api/v1/kyc/documents/pending").set("Authorization", `Bearer ${adminToken}`);
+    expect(pendingAfter.body.documents.some((doc: { id: string }) => doc.id === created.body.id)).toBe(false);
+
+    const secondReview = await request(app)
+      .post(`/api/v1/kyc/documents/${rejected.body.id}/review`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ decision: "approved" });
+    expect(secondReview.status).toBe(404);
   });
 
   it("rejects a diploma upload before the kimlik document is approved", async () => {
@@ -209,8 +297,9 @@ describe("KYC endpoints", () => {
     expect(response.status).toBe(409);
   });
 
-  it("approves a diploma after kimlik is approved and raises kycLevel to 2", async () => {
+  it("approves a diploma after kimlik is approved by admin, raising kycLevel to 2", async () => {
     const { accessToken, userId } = await registerAndLogin("kyc-diploma-after@dentsocia.dev");
+    const adminToken = await getAdminToken();
 
     mockOcrResponse({
       isLegible: true,
@@ -218,9 +307,9 @@ describe("KYC endpoints", () => {
       documentNumber: "12345",
       nameMatchesUser: true,
       confidence: "high",
-      notes: "Kimlik onaylandı",
+      notes: "Kimlik yüklendi",
     });
-    await request(app)
+    const kimlikCreated = await request(app)
       .post("/api/v1/kyc/documents")
       .set("Authorization", `Bearer ${accessToken}`)
       .send({
@@ -229,6 +318,8 @@ describe("KYC endpoints", () => {
         contentType: "image/jpeg",
         claimedFullName: "Ada Lovelace",
       });
+    const kimlikApproved = await reviewDocument(adminToken, kimlikCreated.body.id, "approved");
+    expect(kimlikApproved.body.status).toBe("approved");
 
     mockOcrResponse({
       isLegible: true,
@@ -236,7 +327,7 @@ describe("KYC endpoints", () => {
       documentNumber: "DIP-1",
       nameMatchesUser: true,
       confidence: "high",
-      notes: "Diploma onaylandı",
+      notes: "Diploma yüklendi",
     });
     const diplomaResponse = await request(app)
       .post("/api/v1/kyc/documents")
@@ -247,9 +338,14 @@ describe("KYC endpoints", () => {
         contentType: "image/jpeg",
         claimedFullName: "Ada Lovelace",
       });
-
     expect(diplomaResponse.status).toBe(201);
-    expect(diplomaResponse.body.status).toBe("approved");
+    expect(diplomaResponse.body.status).toBe("pending");
+
+    const diplomaApproved = await reviewDocument(adminToken, diplomaResponse.body.id, "approved");
+    expect(diplomaApproved.status).toBe(200);
+
+    const profileResponse = await request(app).get("/api/v1/users/me").set("Authorization", `Bearer ${accessToken}`);
+    expect(profileResponse.body.kycLevel).toBe(2);
   });
 
   it("rejects a kurumsal_belge upload from a non-employer role", async () => {
@@ -268,7 +364,7 @@ describe("KYC endpoints", () => {
     expect(response.status).toBe(403);
   });
 
-  it("approves a kurumsal_belge for an employer role and raises kycLevel to 3", async () => {
+  it("approves a kurumsal_belge for an employer role via admin, raising kycLevel to 3", async () => {
     const { accessToken, userId } = await registerAndLoginWithRole("kyc-corp-approve@dentsocia.dev", "klinik");
     mockOcrResponse({
       isLegible: true,
@@ -290,7 +386,12 @@ describe("KYC endpoints", () => {
       });
 
     expect(response.status).toBe(201);
-    expect(response.body.status).toBe("approved");
+    expect(response.body.status).toBe("pending");
+
+    const adminToken = await getAdminToken();
+    const approved = await reviewDocument(adminToken, response.body.id, "approved");
+    expect(approved.status).toBe(200);
+    expect(approved.body.status).toBe("approved");
 
     const profileResponse = await request(app).get("/api/v1/users/me").set("Authorization", `Bearer ${accessToken}`);
     expect(profileResponse.body.kycLevel).toBe(3);
