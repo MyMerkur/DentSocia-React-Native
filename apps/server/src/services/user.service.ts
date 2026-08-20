@@ -1,6 +1,10 @@
+import { randomBytes } from "crypto";
 import { findUserById } from "../repositories/user.repository";
-import { buildAvatarStorageKey, createDownloadUrl, createUploadUrl } from "../config/storage";
+import { revokeAllForUser } from "../repositories/refreshToken.repository";
+import { buildAvatarStorageKey, createDownloadUrl, createUploadUrl, deleteObject } from "../config/storage";
+import { hasActiveSubscription, cancelSubscription } from "./subscription.service";
 import { HttpError } from "../utils/httpError";
+import { logger } from "../utils/logger";
 import { EMPLOYER_ROLES } from "@dentsocia/shared-constants";
 import type { updateCareerSchema, updateShowcaseSchema } from "../validators/user.validator";
 import type { z } from "zod";
@@ -97,4 +101,46 @@ export async function requestAvatarUploadUrl(userId: string, contentType: string
   const storageKey = buildAvatarStorageKey(userId, contentType);
   const uploadUrl = await createUploadUrl(storageKey, contentType);
   return { uploadUrl, storageKey };
+}
+
+// KVKK/mağaza şartı — hesap silme. Hard-delete değil, anonimleştirme: 34 modelde User
+// referansı var (vaka, ilan, hub post'u vb.), hard-delete referential integrity'yi bozar
+// ve "hiçbir şey silinmeyecek" kuralına aykırı düşer. Girilen içerik dokunulmadan kalır,
+// sadece kimlik/erişim kapatılır. KYC belgeleri bilinçli olarak silinmiyor — olası bir
+// denetim kaydı olarak tutulması gerekebilir, ayrı bir hukuki/ürün kararı gerektirir.
+export async function deleteAccount(userId: string): Promise<void> {
+  const user = await findUserById(userId);
+  if (!user || user.status === "deleted") {
+    throw new HttpError("Kullanıcı bulunamadı", 404);
+  }
+
+  if (await hasActiveSubscription(userId)) {
+    try {
+      await cancelSubscription(userId);
+    } catch (error) {
+      logger.warn("account.delete.subscription_cancel_failed", { userId, error });
+    }
+  }
+
+  await revokeAllForUser(user._id);
+
+  if (user.showcase.avatarKey) {
+    try {
+      await deleteObject(user.showcase.avatarKey);
+    } catch (error) {
+      logger.warn("account.delete.avatar_delete_failed", { userId, error });
+    }
+  }
+
+  user.email = `deleted-${user._id.toString()}@deleted.dentsocia.local`;
+  user.passwordHash = randomBytes(32).toString("hex");
+  user.affiliatedOrgId = null;
+  user.showcase = {} as typeof user.showcase;
+  user.career = {} as typeof user.career;
+  user.billingInfo = {} as typeof user.billingInfo;
+  user.status = "deleted";
+  user.deletedAt = new Date();
+  await user.save();
+
+  logger.info("account.delete.success", { userId });
 }
