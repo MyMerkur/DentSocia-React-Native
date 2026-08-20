@@ -83,7 +83,7 @@ describe("KYC endpoints", () => {
   });
 
   it("returns a pre-signed upload URL and storage key", async () => {
-    const { accessToken } = await registerAndLogin("kyc-upload@nexora.dev");
+    const { accessToken } = await registerAndLogin("kyc-upload@dentsocia.dev");
 
     const response = await request(app)
       .post("/api/v1/kyc/documents/upload-url")
@@ -96,8 +96,8 @@ describe("KYC endpoints", () => {
   });
 
   it("rejects confirming an upload with a storage key that was not issued to the caller", async () => {
-    const { accessToken } = await registerAndLogin("kyc-storagekey-owner@nexora.dev");
-    const { userId: otherUserId } = await registerAndLogin("kyc-storagekey-other@nexora.dev");
+    const { accessToken } = await registerAndLogin("kyc-storagekey-owner@dentsocia.dev");
+    const { userId: otherUserId } = await registerAndLogin("kyc-storagekey-other@dentsocia.dev");
 
     const response = await request(app)
       .post("/api/v1/kyc/documents")
@@ -113,7 +113,7 @@ describe("KYC endpoints", () => {
   });
 
   it("approves a legible, name-matching kimlik document and raises kycLevel to 1", async () => {
-    const { accessToken, userId } = await registerAndLogin("kyc-approve@nexora.dev");
+    const { accessToken, userId } = await registerAndLogin("kyc-approve@dentsocia.dev");
     mockOcrResponse({
       isLegible: true,
       extractedFullName: "Ada Lovelace",
@@ -144,7 +144,7 @@ describe("KYC endpoints", () => {
   });
 
   it("rejects a document when the extracted name does not match the claim", async () => {
-    const { accessToken, userId } = await registerAndLogin("kyc-mismatch@nexora.dev");
+    const { accessToken, userId } = await registerAndLogin("kyc-mismatch@dentsocia.dev");
     mockOcrResponse({
       isLegible: true,
       extractedFullName: "Farklı İsim",
@@ -169,7 +169,7 @@ describe("KYC endpoints", () => {
   });
 
   it("marks a low-confidence or illegible document as needs_review", async () => {
-    const { accessToken, userId } = await registerAndLogin("kyc-blurry@nexora.dev");
+    const { accessToken, userId } = await registerAndLogin("kyc-blurry@dentsocia.dev");
     mockOcrResponse({
       isLegible: false,
       extractedFullName: null,
@@ -194,7 +194,7 @@ describe("KYC endpoints", () => {
   });
 
   it("rejects a diploma upload before the kimlik document is approved", async () => {
-    const { accessToken, userId } = await registerAndLogin("kyc-diploma-early@nexora.dev");
+    const { accessToken, userId } = await registerAndLogin("kyc-diploma-early@dentsocia.dev");
 
     const response = await request(app)
       .post("/api/v1/kyc/documents")
@@ -210,7 +210,7 @@ describe("KYC endpoints", () => {
   });
 
   it("approves a diploma after kimlik is approved and raises kycLevel to 2", async () => {
-    const { accessToken, userId } = await registerAndLogin("kyc-diploma-after@nexora.dev");
+    const { accessToken, userId } = await registerAndLogin("kyc-diploma-after@dentsocia.dev");
 
     mockOcrResponse({
       isLegible: true,
@@ -253,7 +253,7 @@ describe("KYC endpoints", () => {
   });
 
   it("rejects a kurumsal_belge upload from a non-employer role", async () => {
-    const { accessToken, userId } = await registerAndLoginWithRole("kyc-corp-non-employer@nexora.dev", "hekim");
+    const { accessToken, userId } = await registerAndLoginWithRole("kyc-corp-non-employer@dentsocia.dev", "hekim");
 
     const response = await request(app)
       .post("/api/v1/kyc/documents")
@@ -262,17 +262,17 @@ describe("KYC endpoints", () => {
         documentType: "kurumsal_belge",
         storageKey: `kyc/${userId}/kurumsal_belge/fake.jpeg`,
         contentType: "image/jpeg",
-        claimedFullName: "Nexora Klinik",
+        claimedFullName: "DentSocia Klinik",
       });
 
     expect(response.status).toBe(403);
   });
 
   it("approves a kurumsal_belge for an employer role and raises kycLevel to 3", async () => {
-    const { accessToken, userId } = await registerAndLoginWithRole("kyc-corp-approve@nexora.dev", "klinik");
+    const { accessToken, userId } = await registerAndLoginWithRole("kyc-corp-approve@dentsocia.dev", "klinik");
     mockOcrResponse({
       isLegible: true,
-      extractedFullName: "Nexora Klinik",
+      extractedFullName: "DentSocia Klinik",
       documentNumber: "1234567890",
       nameMatchesUser: true,
       confidence: "high",
@@ -286,7 +286,7 @@ describe("KYC endpoints", () => {
         documentType: "kurumsal_belge",
         storageKey: `kyc/${userId}/kurumsal_belge/fake.jpeg`,
         contentType: "image/jpeg",
-        claimedFullName: "Nexora Klinik",
+        claimedFullName: "DentSocia Klinik",
       });
 
     expect(response.status).toBe(201);

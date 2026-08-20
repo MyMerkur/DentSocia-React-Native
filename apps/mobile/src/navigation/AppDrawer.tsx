@@ -8,8 +8,8 @@ import {
   type DrawerContentComponentProps,
 } from "@react-navigation/drawer";
 import { CreditCard, GraduationCap, Ticket, Briefcase, Target, LogOut, Palette, ShieldCheck } from "lucide-react-native";
-import { EMPLOYER_ROLES } from "@nexora/shared-constants";
-import { fontFamilies, iconSizes, iconStrokeWidth, spacing } from "@nexora/ui-tokens";
+import { EMPLOYER_ROLES } from "@dentsocia/shared-constants";
+import { fontFamilies, iconSizes, iconStrokeWidth, spacing } from "@dentsocia/ui-tokens";
 import { useTheme } from "../store/useThemeStore";
 import { getMe, type UserProfile } from "../services/profileApi";
 import { logout } from "../services/authApi";
@@ -85,7 +85,7 @@ function DrawerContent(props: DrawerContentComponentProps) {
       {...props}
       contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.lg }]}
     >
-      <Text style={[styles.header, { color: colors.textTertiary }]}>NEXORA</Text>
+      <Text style={[styles.header, { color: colors.textTertiary }]}>DENTSOCIA</Text>
 
       <DrawerItem
         label="Kimlik Doğrulama"

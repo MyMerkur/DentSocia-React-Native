@@ -1,5 +1,5 @@
 import { Schema, model, type InferSchemaType } from "mongoose";
-import { MICRO_COMPETENCY_TAGS } from "@nexora/shared-constants";
+import { MICRO_COMPETENCY_TAGS } from "@dentsocia/shared-constants";
 
 export const CASE_STAGES = ["before", "during", "after"] as const;
 export type CaseStage = (typeof CASE_STAGES)[number];

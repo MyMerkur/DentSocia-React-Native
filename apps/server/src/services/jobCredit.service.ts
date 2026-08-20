@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { EMPLOYER_ROLES } from "@nexora/shared-constants";
+import { EMPLOYER_ROLES } from "@dentsocia/shared-constants";
 import { findUserById, incrementJobCreditsBalance } from "../repositories/user.repository";
 import * as jobCreditRepo from "../repositories/jobCreditPurchase.repository";
 import * as iyzicoService from "./iyzico.service";

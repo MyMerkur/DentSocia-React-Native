@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { MICRO_COMPETENCY_TAGS, type MicroCompetencyTag } from "@nexora/shared-constants";
-import { radii, spacing, typography } from "@nexora/ui-tokens";
+import { MICRO_COMPETENCY_TAGS, type MicroCompetencyTag } from "@dentsocia/shared-constants";
+import { radii, spacing, typography } from "@dentsocia/ui-tokens";
 import { useTheme } from "../store/useThemeStore";
 
 const MAX_TAGS = 8;

@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Briefcase } from "lucide-react-native";
-import { getApiErrorMessage } from "@nexora/api-client";
-import { radii, spacing, typography } from "@nexora/ui-tokens";
+import { getApiErrorMessage } from "@dentsocia/api-client";
+import { radii, spacing, typography } from "@dentsocia/ui-tokens";
 import { getMyJobs, updateJobStatus, type JobItem } from "../../../services/jobApi";
 import { CreateJobModal } from "./CreateJobModal";
 import { ApplicantsModal } from "./ApplicantsModal";

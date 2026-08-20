@@ -70,7 +70,7 @@ describe("User profile endpoints", () => {
   });
 
   it("returns an empty showcase and career for a freshly registered user", async () => {
-    const accessToken = await registerAndLogin("profile-default@nexora.dev");
+    const accessToken = await registerAndLogin("profile-default@dentsocia.dev");
 
     const response = await request(app).get("/api/v1/users/me").set("Authorization", `Bearer ${accessToken}`);
 
@@ -83,7 +83,7 @@ describe("User profile endpoints", () => {
   });
 
   it("updates the showcase tab with valid data", async () => {
-    const accessToken = await registerAndLogin("profile-showcase@nexora.dev");
+    const accessToken = await registerAndLogin("profile-showcase@dentsocia.dev");
 
     const response = await request(app)
       .patch("/api/v1/users/me/showcase")
@@ -92,7 +92,7 @@ describe("User profile endpoints", () => {
         displayName: "Ada Lovelace",
         title: "Diş Hekimi",
         bio: "İmplantoloji odaklı çalışıyorum",
-        workplace: "Nexora Klinik",
+        workplace: "DentSocia Klinik",
         city: "İstanbul",
         specialties: ["İmplantoloji", "Endodonti"],
       });
@@ -103,7 +103,7 @@ describe("User profile endpoints", () => {
   });
 
   it("rejects a showcase update with an invalid specialty tag", async () => {
-    const accessToken = await registerAndLogin("profile-invalid-tag@nexora.dev");
+    const accessToken = await registerAndLogin("profile-invalid-tag@dentsocia.dev");
 
     const response = await request(app)
       .patch("/api/v1/users/me/showcase")
@@ -114,7 +114,7 @@ describe("User profile endpoints", () => {
   });
 
   it("resolves an avatarUrl once an avatarKey is set", async () => {
-    const accessToken = await registerAndLogin("profile-avatar@nexora.dev");
+    const accessToken = await registerAndLogin("profile-avatar@dentsocia.dev");
 
     const response = await request(app)
       .patch("/api/v1/users/me/showcase")
@@ -126,7 +126,7 @@ describe("User profile endpoints", () => {
   });
 
   it("updates the career tab including the experience list", async () => {
-    const accessToken = await registerAndLogin("profile-career@nexora.dev");
+    const accessToken = await registerAndLogin("profile-career@dentsocia.dev");
 
     const response = await request(app)
       .patch("/api/v1/users/me/career")
@@ -135,7 +135,7 @@ describe("User profile endpoints", () => {
         openToWork: true,
         desiredPositions: ["Ortodonti"],
         experienceYears: 3,
-        experience: [{ title: "Diş Hekimi", workplace: "Nexora Klinik", startYear: 2021, endYear: null }],
+        experience: [{ title: "Diş Hekimi", workplace: "DentSocia Klinik", startYear: 2021, endYear: null }],
       });
 
     expect(response.status).toBe(200);
@@ -145,7 +145,7 @@ describe("User profile endpoints", () => {
   });
 
   it("returns a pre-signed avatar upload URL and storage key", async () => {
-    const accessToken = await registerAndLogin("profile-avatar-upload@nexora.dev");
+    const accessToken = await registerAndLogin("profile-avatar-upload@dentsocia.dev");
 
     const response = await request(app)
       .post("/api/v1/users/me/avatar-upload-url")
@@ -158,7 +158,7 @@ describe("User profile endpoints", () => {
   });
 
   it("shows isVerifiedOrg as false for an employer role without Level 3 KYC", async () => {
-    const { accessToken } = await registerAndLoginWithRole("profile-unverified-org@nexora.dev", "klinik");
+    const { accessToken } = await registerAndLoginWithRole("profile-unverified-org@dentsocia.dev", "klinik");
 
     const response = await request(app).get("/api/v1/users/me").set("Authorization", `Bearer ${accessToken}`);
 
@@ -167,7 +167,7 @@ describe("User profile endpoints", () => {
   });
 
   it("shows isVerifiedOrg as true for an employer role with Level 3 KYC", async () => {
-    const { accessToken, userId } = await registerAndLoginWithRole("profile-verified-org@nexora.dev", "firma");
+    const { accessToken, userId } = await registerAndLoginWithRole("profile-verified-org@dentsocia.dev", "firma");
     const { UserModel } = await import("./models/User");
     await UserModel.findByIdAndUpdate(userId, { kycLevel: 3 });
 
@@ -178,8 +178,8 @@ describe("User profile endpoints", () => {
   });
 
   it("rejects setting an affiliation directly — joining requires an approved request", async () => {
-    const { accessToken } = await registerAndLoginWithRole("profile-affiliate@nexora.dev", "hekim");
-    const { userId: orgId } = await registerAndLoginWithRole("profile-affiliate-org@nexora.dev", "klinik");
+    const { accessToken } = await registerAndLoginWithRole("profile-affiliate@dentsocia.dev", "hekim");
+    const { userId: orgId } = await registerAndLoginWithRole("profile-affiliate-org@dentsocia.dev", "klinik");
 
     const response = await request(app)
       .patch("/api/v1/users/me/affiliation")
@@ -190,8 +190,8 @@ describe("User profile endpoints", () => {
   });
 
   it("rejects requesting affiliation with a non-employer-role user", async () => {
-    const { accessToken } = await registerAndLoginWithRole("profile-affiliate-invalid@nexora.dev", "hekim");
-    const { userId: otherHekimId } = await registerAndLoginWithRole("profile-affiliate-target@nexora.dev", "hekim");
+    const { accessToken } = await registerAndLoginWithRole("profile-affiliate-invalid@dentsocia.dev", "hekim");
+    const { userId: otherHekimId } = await registerAndLoginWithRole("profile-affiliate-target@dentsocia.dev", "hekim");
 
     const response = await request(app)
       .post("/api/v1/users/me/affiliation-requests")
@@ -202,9 +202,9 @@ describe("User profile endpoints", () => {
   });
 
   it("only affiliates a user once the org approves their request", async () => {
-    const { accessToken, userId } = await registerAndLoginWithRole("profile-affiliate-req@nexora.dev", "hekim");
+    const { accessToken, userId } = await registerAndLoginWithRole("profile-affiliate-req@dentsocia.dev", "hekim");
     const { accessToken: orgToken, userId: orgId } = await registerAndLoginWithRole(
-      "profile-affiliate-req-org@nexora.dev",
+      "profile-affiliate-req-org@dentsocia.dev",
       "klinik",
     );
 
@@ -236,13 +236,13 @@ describe("User profile endpoints", () => {
   });
 
   it("rejects a non-owner reviewing another org's affiliation requests, and allows leaving without approval", async () => {
-    const { accessToken } = await registerAndLoginWithRole("profile-affiliate-leave@nexora.dev", "hekim");
+    const { accessToken } = await registerAndLoginWithRole("profile-affiliate-leave@dentsocia.dev", "hekim");
     const { accessToken: orgToken, userId: orgId } = await registerAndLoginWithRole(
-      "profile-affiliate-leave-org@nexora.dev",
+      "profile-affiliate-leave-org@dentsocia.dev",
       "klinik",
     );
     const { accessToken: outsiderToken } = await registerAndLoginWithRole(
-      "profile-affiliate-outsider@nexora.dev",
+      "profile-affiliate-outsider@dentsocia.dev",
       "klinik",
     );
 

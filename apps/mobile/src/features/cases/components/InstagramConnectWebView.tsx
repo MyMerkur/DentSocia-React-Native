@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { WebView } from "react-native-webview";
-import { getApiErrorMessage } from "@nexora/api-client";
-import { spacing, typography } from "@nexora/ui-tokens";
+import { getApiErrorMessage } from "@dentsocia/api-client";
+import { spacing, typography } from "@dentsocia/ui-tokens";
 import { useTheme } from "../../../store/useThemeStore";
 import { Button } from "../../../components/Button";
 import { BrandSpinner } from "../../../components/BrandSpinner";

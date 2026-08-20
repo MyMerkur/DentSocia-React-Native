@@ -25,7 +25,7 @@ afterAll(async () => {
 });
 
 describe("Refresh token rotation and logout", () => {
-  const credentials = { email: "refresh@nexora.dev", password: "Supersecret123", role: "hekim" as const };
+  const credentials = { email: "refresh@dentsocia.dev", password: "Supersecret123", role: "hekim" as const };
 
   it("rotates the refresh token and rejects the old one on reuse", async () => {
     const registerResponse = await request(app).post("/api/v1/auth/register").send(credentials);

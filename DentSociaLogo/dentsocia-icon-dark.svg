@@ -1,0 +1,7 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="dentsocia uygulama ikonu">
+  <rect width="64" height="64" rx="14" fill="#0F141A"/>
+  <g transform="translate(32 32) scale(0.62) translate(-31.5 -32)" stroke="#ECEFF2">
+    <path d="M22.5 23.01 A15 15 0 1 1 15.905 30.87" stroke-width="6" stroke-linecap="round"/>
+    <path d="M48 13V51" stroke-width="6" stroke-linecap="round"/>
+  </g>
+</svg>

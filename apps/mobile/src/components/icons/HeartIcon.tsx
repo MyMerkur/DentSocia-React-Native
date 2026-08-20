@@ -1,5 +1,5 @@
 import Svg, { Path } from "react-native-svg";
-import { iconStrokeWidth } from "@nexora/ui-tokens";
+import { iconStrokeWidth } from "@dentsocia/ui-tokens";
 import type { CustomIconProps } from "./LockIcon";
 
 export interface HeartIconProps extends CustomIconProps {

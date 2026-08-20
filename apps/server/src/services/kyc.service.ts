@@ -10,7 +10,7 @@ import { analyzeKycDocument, OcrNotConfiguredError, type KycExtraction } from ".
 import { notifyKycStatusChange } from "./notification.service";
 import { logger } from "../utils/logger";
 import { HttpError } from "../utils/httpError";
-import { EMPLOYER_ROLES } from "@nexora/shared-constants";
+import { EMPLOYER_ROLES } from "@dentsocia/shared-constants";
 import type { KycDocumentStatus, KycDocumentType } from "../models/KycDocument";
 
 export async function requestUploadUrl(userId: string, documentType: KycDocumentType, contentType: string) {

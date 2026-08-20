@@ -1,6 +1,6 @@
 import { ActivityIndicator, Pressable, StyleSheet, Text, type StyleProp, type ViewStyle } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { duration, fontFamilies, radii, spacing, type ThemeColors } from "@nexora/ui-tokens";
+import { duration, fontFamilies, radii, spacing, type ThemeColors } from "@dentsocia/ui-tokens";
 import { useTheme } from "../store/useThemeStore";
 
 export type ButtonVariant = "primary" | "gold" | "secondary" | "ghost" | "danger";

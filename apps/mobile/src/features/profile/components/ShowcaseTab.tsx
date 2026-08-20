@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
-import { getApiErrorMessage, uploadFileToPresignedUrl } from "@nexora/api-client";
-import { EMPLOYER_ROLES, type MicroCompetencyTag } from "@nexora/shared-constants";
-import { radii, spacing, typography } from "@nexora/ui-tokens";
+import { getApiErrorMessage, uploadFileToPresignedUrl } from "@dentsocia/api-client";
+import { EMPLOYER_ROLES, type MicroCompetencyTag } from "@dentsocia/shared-constants";
+import { radii, spacing, typography } from "@dentsocia/ui-tokens";
 import { useTheme } from "../../../store/useThemeStore";
 import { Input } from "../../../components/Input";
 import { Button } from "../../../components/Button";
@@ -279,7 +279,7 @@ export function ShowcaseTab({ profile, onUpdated }: ShowcaseTabProps) {
             <>
               <Input
                 style={styles.field}
-                placeholder="Kurumunu Nexora'da bul"
+                placeholder="Kurumunu DentSocia'da bul"
                 value={affiliationQuery}
                 onChangeText={handleSearchAffiliation}
               />

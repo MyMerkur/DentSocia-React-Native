@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Image, Modal, ScrollView, Share, StyleSheet, Text, TouchableOpacity, View, type ViewStyle } from "react-native";
 import { Ticket } from "lucide-react-native";
-import { getApiErrorMessage } from "@nexora/api-client";
-import { radii, spacing, typography } from "@nexora/ui-tokens";
+import { getApiErrorMessage } from "@dentsocia/api-client";
+import { radii, spacing, typography } from "@dentsocia/ui-tokens";
 import { useTheme } from "../../../store/useThemeStore";
 import { ModalShell } from "../../../components/ModalShell";
 import { Card } from "../../../components/Card";

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View, type ViewStyle } from "react-native";
 import { UserSearch } from "lucide-react-native";
-import { getApiErrorMessage } from "@nexora/api-client";
-import type { MicroCompetencyTag } from "@nexora/shared-constants";
-import { fontFamilies, radii, spacing, typographyPresets } from "@nexora/ui-tokens";
+import { getApiErrorMessage } from "@dentsocia/api-client";
+import type { MicroCompetencyTag } from "@dentsocia/shared-constants";
+import { fontFamilies, radii, spacing, typographyPresets } from "@dentsocia/ui-tokens";
 import { useTheme } from "../../../store/useThemeStore";
 import {
   searchCandidates,

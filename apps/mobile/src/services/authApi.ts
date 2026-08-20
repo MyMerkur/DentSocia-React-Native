@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createApiClient, type RefreshedTokens } from "@nexora/api-client";
+import { createApiClient, type RefreshedTokens } from "@dentsocia/api-client";
 import { useAuthStore } from "../store/useAuthStore";
 
 export const API_BASE_URL = "http://localhost:4000";

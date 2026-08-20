@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View, type ViewStyle } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
-import { getApiErrorMessage, uploadFileToPresignedUrl } from "@nexora/api-client";
-import { EMPLOYER_ROLES } from "@nexora/shared-constants";
-import { fontFamilies, spacing, typographyPresets } from "@nexora/ui-tokens";
+import { getApiErrorMessage, uploadFileToPresignedUrl } from "@dentsocia/api-client";
+import { EMPLOYER_ROLES } from "@dentsocia/shared-constants";
+import { fontFamilies, spacing, typographyPresets } from "@dentsocia/ui-tokens";
 import { useTheme } from "../../../store/useThemeStore";
 import { Badge, type BadgeVariant } from "../../../components/Badge";
 import { ModalShell } from "../../../components/ModalShell";

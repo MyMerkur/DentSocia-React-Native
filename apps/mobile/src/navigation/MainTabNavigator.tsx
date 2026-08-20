@@ -1,20 +1,19 @@
-import { useEffect, useState, type ComponentType } from "react";
+import { useEffect, type ComponentType } from "react";
 import { Platform, Pressable, StyleSheet, Text, TouchableOpacity, View, type ViewStyle } from "react-native";
 import { createBottomTabNavigator, type BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BlurView } from "@react-native-community/blur";
-import { House, Users, CirclePlus, Briefcase, User, MessageCircle, Menu } from "lucide-react-native";
+import { House, Users, CirclePlus, Briefcase, User, Menu } from "lucide-react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { duration, elevation, iconSizes, iconStrokeWidth, radii } from "@nexora/ui-tokens";
+import { duration, elevation, iconSizes, iconStrokeWidth, radii } from "@dentsocia/ui-tokens";
 import { ProfileScreen } from "../features/profile/screens/ProfileScreen";
 import { FeedScreen } from "../features/feed/screens/FeedScreen";
 import { HubsScreen } from "../features/hubs/screens/HubsScreen";
 import { CreateCaseScreen } from "../features/cases/screens/CreateCaseScreen";
 import { CareerScreen } from "../features/jobs/screens/CareerScreen";
-import { InboxScreen } from "../features/inbox/screens/InboxScreen";
-import { getUnreadThreadCount } from "../services/inboxApi";
 import { NotificationsHeaderButton } from "../features/notifications/components/NotificationsHeaderButton";
+import { InboxHeaderButton } from "../features/inbox/components/InboxHeaderButton";
 import { useTheme } from "../store/useThemeStore";
 
 export type MainTabParamList = {
@@ -22,7 +21,6 @@ export type MainTabParamList = {
   Hubs: undefined;
   Create: undefined;
   Career: undefined;
-  Inbox: undefined;
   Profile: undefined;
 };
 
@@ -65,11 +63,10 @@ const FeedTabIcon = AnimatedTabIcon(House);
 const HubsTabIcon = AnimatedTabIcon(Users);
 const CreateTabIcon = AnimatedTabIcon(CirclePlus);
 const CareerTabIcon = AnimatedTabIcon(Briefcase);
-const InboxTabIcon = AnimatedTabIcon(MessageCircle);
 const ProfileTabIcon = AnimatedTabIcon(User);
 
 // headerLeft on Ana Sayfa — opens the sidebar (Faz 5, #72). Sits at the same header
-// height as the title and NotificationsHeaderButton, so all three stay aligned.
+// height as the title and headerRight icons, so all three stay aligned.
 function SidebarToggle() {
   const { colors } = useTheme();
   const navigation = useNavigation();
@@ -82,6 +79,18 @@ function SidebarToggle() {
     >
       <Menu size={iconSizes.md} color={colors.textPrimary} strokeWidth={iconStrokeWidth} />
     </TouchableOpacity>
+  );
+}
+
+// headerRight on Ana Sayfa — bildirimler + mesajlar, side by side. Mesajlar used to be
+// its own tab, but with 6 items the raised "Paylaş" button couldn't sit dead-center;
+// dropping it here brings the tab bar to 5 items so Create lands exactly in the middle.
+function FeedHeaderRight() {
+  return (
+    <View style={styles.headerRightRow}>
+      <NotificationsHeaderButton />
+      <InboxHeaderButton />
+    </View>
   );
 }
 
@@ -173,13 +182,6 @@ function renderTabBar(props: BottomTabBarProps) {
 
 export function MainTabNavigator() {
   const { colors } = useTheme();
-  const [unreadThreadCount, setUnreadThreadCount] = useState(0);
-
-  useEffect(() => {
-    getUnreadThreadCount()
-      .then(setUnreadThreadCount)
-      .catch(() => undefined);
-  }, []);
 
   return (
     <Tab.Navigator
@@ -196,21 +198,12 @@ export function MainTabNavigator() {
           title: "Ana Sayfa",
           tabBarIcon: FeedTabIcon,
           headerLeft: SidebarToggle,
-          headerRight: NotificationsHeaderButton,
+          headerRight: FeedHeaderRight,
         }}
       />
       <Tab.Screen name="Hubs" component={HubsScreen} options={{ title: "Topluluklar", tabBarIcon: HubsTabIcon }} />
       <Tab.Screen name="Create" component={CreateCaseScreen} options={{ title: "Paylaş", tabBarIcon: CreateTabIcon }} />
       <Tab.Screen name="Career" component={CareerScreen} options={{ title: "Kariyer", tabBarIcon: CareerTabIcon }} />
-      <Tab.Screen
-        name="Inbox"
-        component={InboxScreen}
-        options={{
-          title: "Mesajlar",
-          tabBarIcon: InboxTabIcon,
-          tabBarBadge: unreadThreadCount > 0 ? unreadThreadCount : undefined,
-        }}
-      />
       <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: "Profil", tabBarIcon: ProfileTabIcon }} />
     </Tab.Navigator>
   );
@@ -220,6 +213,10 @@ const styles = StyleSheet.create({
   sidebarToggle: {
     marginLeft: 12,
     padding: 6,
+  },
+  headerRightRow: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   barWrap: {
     flexDirection: "row",

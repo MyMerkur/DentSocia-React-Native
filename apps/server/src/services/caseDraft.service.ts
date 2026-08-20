@@ -1,6 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
-import { MICRO_COMPETENCY_TAGS } from "@nexora/shared-constants";
+import { MICRO_COMPETENCY_TAGS } from "@dentsocia/shared-constants";
 import { env } from "../config/env";
 import { downloadObject } from "../config/storage";
 import { findUserById } from "../repositories/user.repository";
@@ -78,7 +78,7 @@ export async function generateCaseDraft(userId: string, input: GenerateCaseDraft
             type: "text",
             text: `Bu görseller ve açıklama bir Instagram diş/sağlık vakası paylaşımına ait.${
               input.captionText ? ` Instagram açıklaması: "${input.captionText}"` : ""
-            } Bu içerikten NEXORA platformu için uygun bir vaka başlığı, açıklaması ve ilgili yetkinlik etiketleri öner.`,
+            } Bu içerikten DENTSOCIA platformu için uygun bir vaka başlığı, açıklaması ve ilgili yetkinlik etiketleri öner.`,
           },
         ],
       },

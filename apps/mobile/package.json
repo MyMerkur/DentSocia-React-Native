@@ -1,5 +1,5 @@
 {
-  "name": "@nexora/mobile",
+  "name": "@dentsocia/mobile",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -12,9 +12,9 @@
     "assets:link": "react-native-asset"
   },
   "dependencies": {
-    "@nexora/api-client": "workspace:*",
-    "@nexora/shared-constants": "workspace:*",
-    "@nexora/ui-tokens": "workspace:*",
+    "@dentsocia/api-client": "workspace:*",
+    "@dentsocia/shared-constants": "workspace:*",
+    "@dentsocia/ui-tokens": "workspace:*",
     "@react-native-community/blur": "^4.4.1",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/drawer": "^7.13.5",

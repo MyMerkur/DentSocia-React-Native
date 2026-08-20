@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { EMPLOYER_ROLES } from "@nexora/shared-constants";
-import { spacing, typography } from "@nexora/ui-tokens";
+import { EMPLOYER_ROLES } from "@dentsocia/shared-constants";
+import { spacing, typography } from "@dentsocia/ui-tokens";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { JobListTab } from "../components/JobListTab";
 import { MyApplicationsTab } from "../components/MyApplicationsTab";

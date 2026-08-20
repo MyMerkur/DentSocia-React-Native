@@ -28,8 +28,8 @@ export async function createInvite(adminUserId: string, email: string) {
   try {
     await sendEmail({
       to: email,
-      subject: "NEXORA Eğitmen Daveti",
-      text: `NEXORA'da Eğitmen statüsüne davet edildiniz. Uygulama içinde profilinizden şu daveti kodunu girerek kabul edebilirsiniz: ${token}`,
+      subject: "DENTSOCIA Eğitmen Daveti",
+      text: `DENTSOCIA'da Eğitmen statüsüne davet edildiniz. Uygulama içinde profilinizden şu daveti kodunu girerek kabul edebilirsiniz: ${token}`,
     });
   } catch (error) {
     if (error instanceof EmailNotConfiguredError) {

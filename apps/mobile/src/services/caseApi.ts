@@ -1,4 +1,4 @@
-import type { MicroCompetencyTag } from "@nexora/shared-constants";
+import type { MicroCompetencyTag } from "@dentsocia/shared-constants";
 import { apiClient } from "./authApi";
 
 export type CaseStage = "before" | "during" | "after";

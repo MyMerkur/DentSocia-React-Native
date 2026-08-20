@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { EMPLOYER_ROLES } from "@nexora/shared-constants";
+import { EMPLOYER_ROLES } from "@dentsocia/shared-constants";
 import { UserModel } from "../models/User";
 import { findUserById } from "../repositories/user.repository";
 import { listJobsByEmployer } from "../repositories/job.repository";

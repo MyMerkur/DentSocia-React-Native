@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "NexoraMobile.app"
-               BlueprintName = "NexoraMobile"
-               ReferencedContainer = "container:NexoraMobile.xcodeproj">
+               BuildableName = "DentSociaMobile.app"
+               BlueprintName = "DentSociaMobile"
+               ReferencedContainer = "container:DentSociaMobile.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "NexoraMobileTests.xctest"
-               BlueprintName = "NexoraMobileTests"
-               ReferencedContainer = "container:NexoraMobile.xcodeproj">
+               BuildableName = "DentSociaMobileTests.xctest"
+               BlueprintName = "DentSociaMobileTests"
+               ReferencedContainer = "container:DentSociaMobile.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "NexoraMobile.app"
-            BlueprintName = "NexoraMobile"
-            ReferencedContainer = "container:NexoraMobile.xcodeproj">
+            BuildableName = "DentSociaMobile.app"
+            BlueprintName = "DentSociaMobile"
+            ReferencedContainer = "container:DentSociaMobile.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "NexoraMobile.app"
-            BlueprintName = "NexoraMobile"
-            ReferencedContainer = "container:NexoraMobile.xcodeproj">
+            BuildableName = "DentSociaMobile.app"
+            BlueprintName = "DentSociaMobile"
+            ReferencedContainer = "container:DentSociaMobile.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

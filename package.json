@@ -1,8 +1,8 @@
 {
-  "name": "nexora",
+  "name": "dentsocia",
   "private": true,
   "version": "0.1.0",
-  "description": "NEXORA monorepo — server, mobile ve web uygulamaları için ortak workspace",
+  "description": "DENTSOCIA monorepo — server, mobile ve web uygulamaları için ortak workspace",
   "engines": {
     "node": ">=22.11.0"
   },

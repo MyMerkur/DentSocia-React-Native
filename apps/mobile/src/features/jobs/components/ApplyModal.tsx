@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { getApiErrorMessage } from "@nexora/api-client";
-import { spacing, typography } from "@nexora/ui-tokens";
+import { getApiErrorMessage } from "@dentsocia/api-client";
+import { spacing, typography } from "@dentsocia/ui-tokens";
 import { ModalShell } from "../../../components/ModalShell";
 import { Input } from "../../../components/Input";
 import { Button } from "../../../components/Button";

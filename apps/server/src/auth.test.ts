@@ -25,7 +25,7 @@ afterAll(async () => {
 });
 
 describe("Auth endpoints", () => {
-  const credentials = { email: "test@nexora.dev", password: "Supersecret123", role: "hekim" as const };
+  const credentials = { email: "test@dentsocia.dev", password: "Supersecret123", role: "hekim" as const };
 
   it("registers a new user", async () => {
     const response = await request(app).post("/api/v1/auth/register").send(credentials);
@@ -43,7 +43,7 @@ describe("Auth endpoints", () => {
   it("rejects registration with a weak password", async () => {
     const response = await request(app)
       .post("/api/v1/auth/register")
-      .send({ email: "weak@nexora.dev", password: "alllowercase", role: "hekim" });
+      .send({ email: "weak@dentsocia.dev", password: "alllowercase", role: "hekim" });
     expect(response.status).toBe(400);
   });
 

@@ -151,7 +151,7 @@ describe("Hub endpoints", () => {
   });
 
   it("requires Level 1 KYC to create a free hub", async () => {
-    const { accessToken } = await registerAndLogin("hub-unverified@nexora.dev");
+    const { accessToken } = await registerAndLogin("hub-unverified@dentsocia.dev");
     const response = await request(app)
       .post("/api/v1/hubs")
       .set("Authorization", `Bearer ${accessToken}`)
@@ -160,7 +160,7 @@ describe("Hub endpoints", () => {
   });
 
   it("requires Level 4 KYC to create a paid hub, and provisions an iyzico product/plan on success", async () => {
-    const { accessToken, userId } = await registerAndLogin("hub-instructor@nexora.dev");
+    const { accessToken, userId } = await registerAndLogin("hub-instructor@dentsocia.dev");
     await setKycLevel(userId, 1);
 
     const belowInstructor = await request(app)
@@ -184,11 +184,11 @@ describe("Hub endpoints", () => {
   });
 
   it("joins a free hub, increments memberCount, and rejects a duplicate join", async () => {
-    const { accessToken: ownerToken, userId: ownerId } = await registerAndLogin("hub-owner@nexora.dev");
+    const { accessToken: ownerToken, userId: ownerId } = await registerAndLogin("hub-owner@dentsocia.dev");
     await setKycLevel(ownerId, 1);
     const hub = await createFreeHub(ownerToken);
 
-    const { accessToken: memberToken, userId: memberId } = await registerAndLogin("hub-member@nexora.dev");
+    const { accessToken: memberToken, userId: memberId } = await registerAndLogin("hub-member@dentsocia.dev");
     await setKycLevel(memberId, 1);
 
     const joinRes = await request(app)
@@ -205,11 +205,11 @@ describe("Hub endpoints", () => {
   });
 
   it("rejects checkout for a free hub and rejects join for a paid hub", async () => {
-    const { accessToken: ownerToken, userId: ownerId } = await registerAndLogin("hub-mismatch-owner@nexora.dev");
+    const { accessToken: ownerToken, userId: ownerId } = await registerAndLogin("hub-mismatch-owner@dentsocia.dev");
     await setKycLevel(ownerId, 1);
     const freeHub = await createFreeHub(ownerToken, "Ücretsiz Hub");
 
-    const { accessToken: memberToken } = await registerAndLogin("hub-mismatch-member@nexora.dev");
+    const { accessToken: memberToken } = await registerAndLogin("hub-mismatch-member@dentsocia.dev");
     const checkoutOnFree = await request(app)
       .post(`/api/v1/hubs/${freeHub.id}/membership/checkout`)
       .set("Authorization", `Bearer ${memberToken}`)
@@ -225,11 +225,11 @@ describe("Hub endpoints", () => {
   });
 
   it("completes the paid membership checkout -> callback flow and processes renewal/failure webhooks idempotently", async () => {
-    const { accessToken: ownerToken, userId: ownerId } = await registerAndLogin("hub-paid-owner@nexora.dev");
+    const { accessToken: ownerToken, userId: ownerId } = await registerAndLogin("hub-paid-owner@dentsocia.dev");
     await setKycLevel(ownerId, 4);
     const hub = await createPaidHub(ownerToken);
 
-    const { accessToken: memberToken } = await registerAndLogin("hub-paid-member@nexora.dev");
+    const { accessToken: memberToken } = await registerAndLogin("hub-paid-member@dentsocia.dev");
     const { subscriptionReferenceCode, customerReferenceCode } = await activateHubMembership(memberToken, hub.id, "flow-1");
 
     const detail = await request(app).get(`/api/v1/hubs/${hub.id}`).set("Authorization", `Bearer ${memberToken}`);
@@ -269,12 +269,12 @@ describe("Hub endpoints", () => {
   });
 
   it("leaves a free hub (decrements memberCount) and a paid hub (cancels the iyzico subscription)", async () => {
-    const { accessToken: ownerToken, userId: ownerId } = await registerAndLogin("hub-leave-owner@nexora.dev");
+    const { accessToken: ownerToken, userId: ownerId } = await registerAndLogin("hub-leave-owner@dentsocia.dev");
     await setKycLevel(ownerId, 4);
     const freeHub = await createFreeHub(ownerToken, "Ayrılınabilir Ücretsiz Hub");
     const paidHub = await createPaidHub(ownerToken, "Ayrılınabilir Ücretli Hub");
 
-    const { accessToken: memberToken } = await registerAndLogin("hub-leave-member@nexora.dev");
+    const { accessToken: memberToken } = await registerAndLogin("hub-leave-member@dentsocia.dev");
     await request(app).post(`/api/v1/hubs/${freeHub.id}/join`).set("Authorization", `Bearer ${memberToken}`);
     await activateHubMembership(memberToken, paidHub.id, "leave-1");
 
@@ -297,11 +297,11 @@ describe("Hub endpoints", () => {
   });
 
   it("requires active membership to post or read a hub's feed, and paginates posts once a member", async () => {
-    const { accessToken: ownerToken, userId: ownerId } = await registerAndLogin("hub-feed-owner@nexora.dev");
+    const { accessToken: ownerToken, userId: ownerId } = await registerAndLogin("hub-feed-owner@dentsocia.dev");
     await setKycLevel(ownerId, 1);
     const hub = await createFreeHub(ownerToken, "Vaka Paylaşım Hub");
 
-    const { accessToken: outsiderToken } = await registerAndLogin("hub-feed-outsider@nexora.dev");
+    const { accessToken: outsiderToken } = await registerAndLogin("hub-feed-outsider@dentsocia.dev");
     const forbiddenPost = await request(app)
       .post(`/api/v1/hubs/${hub.id}/posts`)
       .set("Authorization", `Bearer ${outsiderToken}`)

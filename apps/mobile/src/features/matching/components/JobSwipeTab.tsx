@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { RefreshCw } from "lucide-react-native";
-import { getApiErrorMessage } from "@nexora/api-client";
-import { spacing, typography } from "@nexora/ui-tokens";
+import { getApiErrorMessage } from "@dentsocia/api-client";
+import { spacing, typography } from "@dentsocia/ui-tokens";
 import { getJobSwipeFeed, swipeJob, type SwipeJobCard } from "../../../services/matchingApi";
 import type { ThreadContextType } from "../../../services/inboxApi";
 import { SwipeCard } from "./SwipeCard";

@@ -70,7 +70,7 @@ describe("Case endpoints", () => {
   });
 
   it("rejects case creation for a user without KYC Level 1", async () => {
-    const { accessToken } = await registerAndLogin("case-no-kyc@nexora.dev");
+    const { accessToken } = await registerAndLogin("case-no-kyc@dentsocia.dev");
 
     const response = await request(app)
       .post("/api/v1/cases")
@@ -84,7 +84,7 @@ describe("Case endpoints", () => {
   });
 
   it("rejects case creation without any images", async () => {
-    const { accessToken, userId } = await registerAndLogin("case-no-image@nexora.dev");
+    const { accessToken, userId } = await registerAndLogin("case-no-image@dentsocia.dev");
     await verifyKyc(userId);
 
     const response = await request(app)
@@ -96,7 +96,7 @@ describe("Case endpoints", () => {
   });
 
   it("creates a case for a KYC-verified user and returns resolved image/author URLs", async () => {
-    const { accessToken, userId } = await registerAndLogin("case-create@nexora.dev");
+    const { accessToken, userId } = await registerAndLogin("case-create@dentsocia.dev");
     await verifyKyc(userId);
 
     const response = await request(app)
@@ -120,7 +120,7 @@ describe("Case endpoints", () => {
   });
 
   it("returns the feed sorted by newest first", async () => {
-    const { accessToken, userId } = await registerAndLogin("case-feed@nexora.dev");
+    const { accessToken, userId } = await registerAndLogin("case-feed@dentsocia.dev");
     await verifyKyc(userId);
 
     await request(app)
@@ -141,7 +141,7 @@ describe("Case endpoints", () => {
   });
 
   it("returns a pre-signed image upload URL and storage key", async () => {
-    const { accessToken } = await registerAndLogin("case-upload-url@nexora.dev");
+    const { accessToken } = await registerAndLogin("case-upload-url@dentsocia.dev");
 
     const response = await request(app)
       .post("/api/v1/cases/image-upload-url")

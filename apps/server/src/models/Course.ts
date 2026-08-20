@@ -1,5 +1,5 @@
 import { Schema, model, type InferSchemaType } from "mongoose";
-import { MICRO_COMPETENCY_TAGS } from "@nexora/shared-constants";
+import { MICRO_COMPETENCY_TAGS } from "@dentsocia/shared-constants";
 
 const courseSchema = new Schema(
   {

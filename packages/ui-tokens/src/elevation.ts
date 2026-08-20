@@ -24,8 +24,11 @@ export const elevation = {
   // Gold-tint glow, reserved for the primary CTA button (spec §4) — not a depth cue,
   // a brand-color accent shadow. iOS gets the real tinted glow; Android's shadowColor
   // support is limited pre-API 28 so it falls back to a small neutral lift.
+  // Kept tight (small radius/offset): a wide radius here bleeds past the CTA's own
+  // bounds into the tab bar's floating-button area and reads as a muddy smear rather
+  // than a halo (seen on the raised "Paylaş" button in MainTabNavigator).
   glow: {
-    ios: { shadowColor: "#D8B872", shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.35, shadowRadius: 22 },
+    ios: { shadowColor: "#D8B872", shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.4, shadowRadius: 6 },
     android: { elevation: 6 },
   },
 } satisfies Record<string, ElevationLevel>;

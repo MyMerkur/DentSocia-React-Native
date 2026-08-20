@@ -29,7 +29,7 @@ beforeAll(async () => {
   process.env.AUTH_RATE_LIMIT_MAX = "1000";
   process.env.INSTAGRAM_APP_ID = "test-app-id";
   process.env.INSTAGRAM_APP_SECRET = "test-app-secret";
-  process.env.INSTAGRAM_REDIRECT_URI = "https://api.nexora.dev/api/v1/instagram/oauth/callback";
+  process.env.INSTAGRAM_REDIRECT_URI = "https://api.dentsocia.dev/api/v1/instagram/oauth/callback";
   process.env.INSTAGRAM_RATE_LIMIT_MAX = "1000";
 
   const { connectDB } = await import("./config/db");
@@ -83,13 +83,13 @@ describe("Instagram OAuth endpoints", () => {
   });
 
   it("rejects non-instructors from connecting", async () => {
-    const { accessToken } = await registerAndLogin("ig-non-instructor@nexora.dev");
+    const { accessToken } = await registerAndLogin("ig-non-instructor@dentsocia.dev");
     const response = await request(app).get("/api/v1/instagram/connect").set("Authorization", `Bearer ${accessToken}`);
     expect(response.status).toBe(403);
   });
 
   it("completes the full connect -> callback -> status flow for an instructor", async () => {
-    const { accessToken, userId } = await registerAndLogin("ig-connect@nexora.dev");
+    const { accessToken, userId } = await registerAndLogin("ig-connect@dentsocia.dev");
     await makeInstructor(userId);
 
     const callbackRes = await connectInstagram(accessToken);
@@ -116,7 +116,7 @@ describe("Instagram OAuth endpoints", () => {
   });
 
   it("returns only IMAGE media and disconnect clears the connection", async () => {
-    const { accessToken, userId } = await registerAndLogin("ig-media@nexora.dev");
+    const { accessToken, userId } = await registerAndLogin("ig-media@dentsocia.dev");
     await makeInstructor(userId);
     await connectInstagram(accessToken);
 

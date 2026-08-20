@@ -144,7 +144,7 @@ async function activateDues(memberToken: string, orgId: string, tokenSuffix: str
 
 describe("Org dues endpoints", () => {
   it("rejects dues plan creation for non-dernek accounts", async () => {
-    const { accessToken, userId } = await registerAndLogin("dues-notdernek@nexora.dev", "klinik");
+    const { accessToken, userId } = await registerAndLogin("dues-notdernek@dentsocia.dev", "klinik");
     const response = await request(app)
       .post(`/api/v1/orgs/${userId}/dues-plan`)
       .set("Authorization", `Bearer ${accessToken}`)
@@ -153,7 +153,7 @@ describe("Org dues endpoints", () => {
   });
 
   it("rejects dues plan creation for an unverified dernek account", async () => {
-    const { accessToken, userId } = await registerAndLogin("dues-unverified@nexora.dev", "dernek");
+    const { accessToken, userId } = await registerAndLogin("dues-unverified@dentsocia.dev", "dernek");
     const response = await request(app)
       .post(`/api/v1/orgs/${userId}/dues-plan`)
       .set("Authorization", `Bearer ${accessToken}`)
@@ -162,7 +162,7 @@ describe("Org dues endpoints", () => {
   });
 
   it("rejects creating a second dues plan for the same org", async () => {
-    const { accessToken: ownerToken, userId: orgId } = await registerAndLogin("dues-owner-1@nexora.dev", "dernek");
+    const { accessToken: ownerToken, userId: orgId } = await registerAndLogin("dues-owner-1@dentsocia.dev", "dernek");
     await createPlan(ownerToken, orgId);
 
     const secondRes = await request(app)
@@ -173,10 +173,10 @@ describe("Org dues endpoints", () => {
   });
 
   it("rejects dues checkout for a non-member", async () => {
-    const { accessToken: ownerToken, userId: orgId } = await registerAndLogin("dues-owner-2@nexora.dev", "dernek");
+    const { accessToken: ownerToken, userId: orgId } = await registerAndLogin("dues-owner-2@dentsocia.dev", "dernek");
     await createPlan(ownerToken, orgId);
 
-    const { accessToken: outsiderToken } = await registerAndLogin("dues-outsider-2@nexora.dev");
+    const { accessToken: outsiderToken } = await registerAndLogin("dues-outsider-2@dentsocia.dev");
     const response = await request(app)
       .post(`/api/v1/orgs/${orgId}/dues/checkout`)
       .set("Authorization", `Bearer ${outsiderToken}`)
@@ -185,10 +185,10 @@ describe("Org dues endpoints", () => {
   });
 
   it("completes the full dues flow: plan -> checkout -> callback -> active -> visible to the owner", async () => {
-    const { accessToken: ownerToken, userId: orgId } = await registerAndLogin("dues-owner-3@nexora.dev", "dernek");
+    const { accessToken: ownerToken, userId: orgId } = await registerAndLogin("dues-owner-3@dentsocia.dev", "dernek");
     await createPlan(ownerToken, orgId);
 
-    const { accessToken: memberToken } = await registerAndLogin("dues-member-3@nexora.dev");
+    const { accessToken: memberToken } = await registerAndLogin("dues-member-3@dentsocia.dev");
     await affiliate(memberToken, orgId);
     await activateDues(memberToken, orgId, "flow-1");
 
@@ -213,10 +213,10 @@ describe("Org dues endpoints", () => {
   });
 
   it("processes a past_due webhook and is idempotent on duplicate delivery", async () => {
-    const { accessToken: ownerToken, userId: orgId } = await registerAndLogin("dues-owner-4@nexora.dev", "dernek");
+    const { accessToken: ownerToken, userId: orgId } = await registerAndLogin("dues-owner-4@dentsocia.dev", "dernek");
     await createPlan(ownerToken, orgId);
 
-    const { accessToken: memberToken } = await registerAndLogin("dues-member-4@nexora.dev");
+    const { accessToken: memberToken } = await registerAndLogin("dues-member-4@dentsocia.dev");
     await affiliate(memberToken, orgId);
     const { subscriptionReferenceCode, customerReferenceCode } = await activateDues(memberToken, orgId, "webhook-1");
 
@@ -258,10 +258,10 @@ describe("Org dues endpoints", () => {
   });
 
   it("cancels an active dues subscription via the iyzico subscription cancel call", async () => {
-    const { accessToken: ownerToken, userId: orgId } = await registerAndLogin("dues-owner-5@nexora.dev", "dernek");
+    const { accessToken: ownerToken, userId: orgId } = await registerAndLogin("dues-owner-5@dentsocia.dev", "dernek");
     await createPlan(ownerToken, orgId);
 
-    const { accessToken: memberToken } = await registerAndLogin("dues-member-5@nexora.dev");
+    const { accessToken: memberToken } = await registerAndLogin("dues-member-5@dentsocia.dev");
     await affiliate(memberToken, orgId);
     await activateDues(memberToken, orgId, "cancel-1");
 

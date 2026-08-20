@@ -1,5 +1,5 @@
 import { Schema, model, type InferSchemaType } from "mongoose";
-import { MICRO_COMPETENCY_TAGS, EMPLOYER_ROLES } from "@nexora/shared-constants";
+import { MICRO_COMPETENCY_TAGS, EMPLOYER_ROLES } from "@dentsocia/shared-constants";
 
 export const JOB_STATUSES = ["open", "closed"] as const;
 export type JobStatus = (typeof JOB_STATUSES)[number];

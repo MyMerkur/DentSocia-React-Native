@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { fontFamilies, spacing } from "@nexora/ui-tokens";
+import { fontFamilies, spacing } from "@dentsocia/ui-tokens";
 import { useTheme } from "../store/useThemeStore";
 
 interface StepsIndicatorProps {

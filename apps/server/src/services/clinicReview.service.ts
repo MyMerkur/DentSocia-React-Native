@@ -1,4 +1,4 @@
-import { EMPLOYER_ROLES } from "@nexora/shared-constants";
+import { EMPLOYER_ROLES } from "@dentsocia/shared-constants";
 import { findUserById } from "../repositories/user.repository";
 import { upsertReview, listByOrg } from "../repositories/clinicReview.repository";
 import { resolveUserSummary, type UserSummarySource } from "../utils/userSummary";

@@ -48,10 +48,10 @@ async function createJob(accessToken: string, employerId: string, title = "Diş 
 describe("Application endpoints", () => {
   it("rejects applying to a closed job", async () => {
     const { accessToken: employerToken, userId: employerId } = await registerAndLogin(
-      "app-closed-employer@nexora.dev",
+      "app-closed-employer@dentsocia.dev",
       "klinik",
     );
-    const { accessToken: applicantToken } = await registerAndLogin("app-closed-applicant@nexora.dev", "hekim");
+    const { accessToken: applicantToken } = await registerAndLogin("app-closed-applicant@dentsocia.dev", "hekim");
     const jobId = await createJob(employerToken, employerId);
 
     await request(app)
@@ -69,7 +69,7 @@ describe("Application endpoints", () => {
 
   it("rejects applying to your own job", async () => {
     const { accessToken: employerToken, userId: employerId } = await registerAndLogin(
-      "app-self-employer@nexora.dev",
+      "app-self-employer@dentsocia.dev",
       "firma",
     );
     const jobId = await createJob(employerToken, employerId);
@@ -84,10 +84,10 @@ describe("Application endpoints", () => {
 
   it("creates an application and rejects a duplicate application", async () => {
     const { accessToken: employerToken, userId: employerId } = await registerAndLogin(
-      "app-dup-employer@nexora.dev",
+      "app-dup-employer@dentsocia.dev",
       "dernek",
     );
-    const { accessToken: applicantToken } = await registerAndLogin("app-dup-applicant@nexora.dev", "teknisyen");
+    const { accessToken: applicantToken } = await registerAndLogin("app-dup-applicant@dentsocia.dev", "teknisyen");
     const jobId = await createJob(employerToken, employerId);
 
     const first = await request(app)
@@ -109,10 +109,10 @@ describe("Application endpoints", () => {
 
   it("returns the applicant's own applications with job info", async () => {
     const { accessToken: employerToken, userId: employerId } = await registerAndLogin(
-      "app-mine-employer@nexora.dev",
+      "app-mine-employer@dentsocia.dev",
       "klinik",
     );
-    const { accessToken: applicantToken } = await registerAndLogin("app-mine-applicant@nexora.dev", "asistan");
+    const { accessToken: applicantToken } = await registerAndLogin("app-mine-applicant@dentsocia.dev", "asistan");
     const jobId = await createJob(employerToken, employerId, "Klinik Asistanı aranıyor");
 
     await request(app)
@@ -131,11 +131,11 @@ describe("Application endpoints", () => {
 
   it("only lets the job owner view and manage applications", async () => {
     const { accessToken: employerToken, userId: employerId } = await registerAndLogin(
-      "app-manage-employer@nexora.dev",
+      "app-manage-employer@dentsocia.dev",
       "firma",
     );
-    const { accessToken: otherToken } = await registerAndLogin("app-manage-other@nexora.dev", "klinik");
-    const { accessToken: applicantToken } = await registerAndLogin("app-manage-applicant@nexora.dev", "hekim");
+    const { accessToken: otherToken } = await registerAndLogin("app-manage-other@dentsocia.dev", "klinik");
+    const { accessToken: applicantToken } = await registerAndLogin("app-manage-applicant@dentsocia.dev", "hekim");
     const jobId = await createJob(employerToken, employerId);
 
     const applied = await request(app)

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { MessageCircle } from "lucide-react-native";
-import { fontFamilies, spacing, type ThemeColors } from "@nexora/ui-tokens";
+import { fontFamilies, spacing, type ThemeColors } from "@dentsocia/ui-tokens";
 import { useTheme } from "../../../store/useThemeStore";
 import { Button } from "../../../components/Button";
 import { Card } from "../../../components/Card";
@@ -60,7 +60,7 @@ export function DesignPreviewScreen() {
       </Section>
 
       <Section title="Input" colors={colors}>
-        <Input label="E-posta" placeholder="ornek@nexora.dev" style={styles.stackGap} />
+        <Input label="E-posta" placeholder="ornek@dentsocia.dev" style={styles.stackGap} />
         <Input label="Şifre" error="Şifre en az 8 karakter olmalı" style={styles.stackGap} />
       </Section>
 
@@ -79,7 +79,7 @@ export function DesignPreviewScreen() {
         <Row>
           <Avatar name="Ada Lovelace" size="sm" />
           <Avatar name="Ada Lovelace" size="md" />
-          <Avatar name="Nexora Klinik" size="lg" verified />
+          <Avatar name="DentSocia Klinik" size="lg" verified />
         </Row>
       </Section>
 

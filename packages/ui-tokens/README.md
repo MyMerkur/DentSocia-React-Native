@@ -15,6 +15,6 @@ Dark & Gold tema tokenleri: koyu karbon (#121212) zemin, elektrik mavisi/şampan
 
 **Neden v1 ve v2 bir arada?** 41 ekran/modal henüz yeni sisteme taşınmadı (bkz. docs/PROJECT_PLAN.md, Faz 5 issue kırılımı — #62-#66). v1 anahtarları kaldırılmadan yanında v2 eklenerek geçiş kırılmasız yapılıyor; ekranlar taşındıkça v1-only anahtarlar zamanla terk edilecek.
 
-**Font native linking:** `apps/mobile/assets/fonts/` altındaki Inter TTF dosyaları `react-native-asset` ile iOS (`Info.plist` UIAppFonts + Xcode Resources) ve Android (`assets/fonts`) tarafına zaten bağlandı. Yeni bir font dosyası eklenirse `pnpm --filter @nexora/mobile assets:link` çalıştırılıp native proje değişiklikleri commit edilmeli.
+**Font native linking:** `apps/mobile/assets/fonts/` altındaki Inter TTF dosyaları `react-native-asset` ile iOS (`Info.plist` UIAppFonts + Xcode Resources) ve Android (`assets/fonts`) tarafına zaten bağlandı. Yeni bir font dosyası eklenirse `pnpm --filter @dentsocia/mobile assets:link` çalıştırılıp native proje değişiklikleri commit edilmeli.
 
 Mobilde RN `StyleSheet` değerleri olarak kullanılıyor, ileride web'de Tailwind config olarak tüketilecek.

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
-import { getApiErrorMessage } from "@nexora/api-client";
-import type { MicroCompetencyTag } from "@nexora/shared-constants";
-import { radii, spacing, typography } from "@nexora/ui-tokens";
+import { getApiErrorMessage } from "@dentsocia/api-client";
+import type { MicroCompetencyTag } from "@dentsocia/shared-constants";
+import { radii, spacing, typography } from "@dentsocia/ui-tokens";
 import { useTheme } from "../../../store/useThemeStore";
 import { Input } from "../../../components/Input";
 import { Button } from "../../../components/Button";

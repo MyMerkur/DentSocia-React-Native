@@ -1,6 +1,6 @@
 import { Check, X } from "lucide-react-native";
 import { StyleSheet, Text, View, type StyleProp, type ViewStyle } from "react-native";
-import { fontFamilies, spacing, typographyPresets, withAlpha, type ThemeColors } from "@nexora/ui-tokens";
+import { fontFamilies, spacing, typographyPresets, withAlpha, type ThemeColors } from "@dentsocia/ui-tokens";
 import { useTheme } from "../store/useThemeStore";
 
 export type ResultCardTone = "success" | "danger";

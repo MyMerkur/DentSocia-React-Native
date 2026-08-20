@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View, type ViewStyle } from "react-native";
 import { RefreshCw } from "lucide-react-native";
-import { getApiErrorMessage } from "@nexora/api-client";
-import { spacing, typography } from "@nexora/ui-tokens";
+import { getApiErrorMessage } from "@dentsocia/api-client";
+import { spacing, typography } from "@dentsocia/ui-tokens";
 import { ModalShell } from "../../../components/ModalShell";
 import { Avatar } from "../../../components/Avatar";
 import { Badge } from "../../../components/Badge";

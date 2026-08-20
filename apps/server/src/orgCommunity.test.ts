@@ -46,7 +46,7 @@ async function verifyOrgKyc(userId: string) {
 
 describe("Org community: announcements, votes, device tokens", () => {
   it("rejects announcement/vote creation for non-dernek accounts", async () => {
-    const { accessToken, userId } = await registerAndLogin("org-notdernek@nexora.dev", "klinik");
+    const { accessToken, userId } = await registerAndLogin("org-notdernek@dentsocia.dev", "klinik");
 
     const announcementRes = await request(app)
       .post(`/api/v1/orgs/${userId}/announcements`)
@@ -62,7 +62,7 @@ describe("Org community: announcements, votes, device tokens", () => {
   });
 
   it("rejects announcement/vote creation for an unverified dernek account", async () => {
-    const { accessToken, userId } = await registerAndLogin("org-unverified-dernek@nexora.dev", "dernek");
+    const { accessToken, userId } = await registerAndLogin("org-unverified-dernek@dentsocia.dev", "dernek");
 
     const announcementRes = await request(app)
       .post(`/api/v1/orgs/${userId}/announcements`)
@@ -78,8 +78,8 @@ describe("Org community: announcements, votes, device tokens", () => {
   });
 
   it("rejects listing announcements for non-members", async () => {
-    const { userId: orgId } = await registerAndLogin("org-owner-1@nexora.dev", "dernek");
-    const { accessToken: outsiderToken } = await registerAndLogin("org-outsider-1@nexora.dev");
+    const { userId: orgId } = await registerAndLogin("org-owner-1@dentsocia.dev", "dernek");
+    const { accessToken: outsiderToken } = await registerAndLogin("org-outsider-1@dentsocia.dev");
 
     const listRes = await request(app)
       .get(`/api/v1/orgs/${orgId}/announcements`)
@@ -88,9 +88,9 @@ describe("Org community: announcements, votes, device tokens", () => {
   });
 
   it("creates an announcement and notifies affiliated members", async () => {
-    const { accessToken: ownerToken, userId: orgId } = await registerAndLogin("org-owner-2@nexora.dev", "dernek");
+    const { accessToken: ownerToken, userId: orgId } = await registerAndLogin("org-owner-2@dentsocia.dev", "dernek");
     await verifyOrgKyc(orgId);
-    const { accessToken: memberToken } = await registerAndLogin("org-member-2@nexora.dev");
+    const { accessToken: memberToken } = await registerAndLogin("org-member-2@dentsocia.dev");
     await affiliate(memberToken, orgId);
 
     const createRes = await request(app)
@@ -113,9 +113,9 @@ describe("Org community: announcements, votes, device tokens", () => {
   });
 
   it("runs the full vote lifecycle: open -> cast -> duplicate 409 -> results -> close -> cast-on-closed 400", async () => {
-    const { accessToken: ownerToken, userId: orgId } = await registerAndLogin("org-owner-3@nexora.dev", "dernek");
+    const { accessToken: ownerToken, userId: orgId } = await registerAndLogin("org-owner-3@dentsocia.dev", "dernek");
     await verifyOrgKyc(orgId);
-    const { accessToken: memberToken } = await registerAndLogin("org-member-3@nexora.dev");
+    const { accessToken: memberToken } = await registerAndLogin("org-member-3@dentsocia.dev");
     await affiliate(memberToken, orgId);
 
     const createRes = await request(app)
@@ -154,7 +154,7 @@ describe("Org community: announcements, votes, device tokens", () => {
     expect(closeRes.status).toBe(200);
     expect(closeRes.body.status).toBe("closed");
 
-    const { accessToken: secondMemberToken } = await registerAndLogin("org-member-3b@nexora.dev");
+    const { accessToken: secondMemberToken } = await registerAndLogin("org-member-3b@dentsocia.dev");
     await affiliate(secondMemberToken, orgId);
     const castOnClosedRes = await request(app)
       .post(`/api/v1/orgs/votes/${voteId}/ballot`)
@@ -164,8 +164,8 @@ describe("Org community: announcements, votes, device tokens", () => {
   });
 
   it("registers a device token and moves it to a new user on re-registration", async () => {
-    const { accessToken: firstToken } = await registerAndLogin("device-first@nexora.dev");
-    const { accessToken: secondToken, userId: secondUserId } = await registerAndLogin("device-second@nexora.dev");
+    const { accessToken: firstToken } = await registerAndLogin("device-first@dentsocia.dev");
+    const { accessToken: secondToken, userId: secondUserId } = await registerAndLogin("device-second@dentsocia.dev");
 
     const registerRes = await request(app)
       .post("/api/v1/notifications/device-token")

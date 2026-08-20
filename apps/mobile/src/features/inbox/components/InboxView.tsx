@@ -10,8 +10,8 @@ import {
   View,
 } from "react-native";
 import { MessageCircle } from "lucide-react-native";
-import { getApiErrorMessage } from "@nexora/api-client";
-import { radii, spacing, typography } from "@nexora/ui-tokens";
+import { getApiErrorMessage } from "@dentsocia/api-client";
+import { radii, spacing, typography } from "@dentsocia/ui-tokens";
 import { useTheme } from "../../../store/useThemeStore";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { getSocket } from "../../../services/socket";
@@ -31,9 +31,9 @@ import {
 } from "../../../services/inboxApi";
 
 interface InboxViewProps {
-  // When provided, renders a "Kapat" button in the list header — used when InboxView is
-  // hosted inside a modal (contextual "message this person" flows). Omitted when hosted
-  // as the persistent "Mesajlar" tab, where there's nothing to close back to.
+  // Renders a "Kapat" button in the list header — InboxView is always hosted inside
+  // InboxModal now (both the contextual "message this person" flows and the general
+  // inbox list opened from InboxHeaderButton), so this is effectively always provided.
   onClose?: () => void;
   active?: boolean;
   startTarget?: { userId: string; context?: { type: ThreadContextType; id?: string } } | null;

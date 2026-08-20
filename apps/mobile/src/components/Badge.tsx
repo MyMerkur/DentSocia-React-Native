@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import { fontFamilies, radii, spacing, withAlpha, type ThemeColors } from "@nexora/ui-tokens";
+import { fontFamilies, radii, spacing, withAlpha, type ThemeColors } from "@dentsocia/ui-tokens";
 import { useTheme } from "../store/useThemeStore";
 
 export type BadgeVariant = "neutral" | "blue" | "gold" | "success" | "warning" | "danger";

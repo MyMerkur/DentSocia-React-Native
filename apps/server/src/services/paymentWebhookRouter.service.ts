@@ -7,7 +7,7 @@ import type { SubscriptionWebhookPayload } from "./subscription.service";
 
 // Single merchant-wide iyzico webhook route serves three independent domains: the app-wide
 // Subscription collection (teaser_monthly/clinic_premium_monthly), per-Hub HubMembership
-// records (Nexora Hubs), and per-org OrgDuesSubscription records (dernek aidatı). Dispatch by
+// records (DentSocia Hubs), and per-org OrgDuesSubscription records (dernek aidatı). Dispatch by
 // looking up which collection actually owns the subscriptionReferenceCode BEFORE calling into
 // any handler, so only one handler ever processes a given event — no shared-dedupeKey collision
 // between domains. OrgDuesSubscription is checked last (its own handler already no-ops if the

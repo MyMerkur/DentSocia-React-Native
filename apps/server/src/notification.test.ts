@@ -99,7 +99,7 @@ describe("Notification endpoints", () => {
   });
 
   it("creates a kyc_status notification when a KYC document is approved (SMTP not configured, email step skipped)", async () => {
-    const { accessToken, userId } = await registerAndLogin("notif-kyc@nexora.dev");
+    const { accessToken, userId } = await registerAndLogin("notif-kyc@dentsocia.dev");
     mockOcrResponse({
       isLegible: true,
       extractedFullName: "Ada Lovelace",
@@ -129,10 +129,10 @@ describe("Notification endpoints", () => {
 
   it("creates a new_application notification for the employer when someone applies", async () => {
     const { accessToken: employerToken, userId: employerId } = await registerAndLogin(
-      "notif-employer@nexora.dev",
+      "notif-employer@dentsocia.dev",
       "klinik",
     );
-    const { accessToken: applicantToken } = await registerAndLogin("notif-applicant@nexora.dev", "hekim");
+    const { accessToken: applicantToken } = await registerAndLogin("notif-applicant@dentsocia.dev", "hekim");
     const jobId = await createJob(employerToken, employerId);
 
     await request(app)
@@ -150,10 +150,10 @@ describe("Notification endpoints", () => {
 
   it("creates an application_status notification for the applicant when their status changes", async () => {
     const { accessToken: employerToken, userId: employerId } = await registerAndLogin(
-      "notif-status-employer@nexora.dev",
+      "notif-status-employer@dentsocia.dev",
       "firma",
     );
-    const { accessToken: applicantToken } = await registerAndLogin("notif-status-applicant@nexora.dev", "teknisyen");
+    const { accessToken: applicantToken } = await registerAndLogin("notif-status-applicant@dentsocia.dev", "teknisyen");
     const jobId = await createJob(employerToken, employerId);
 
     const applied = await request(app)
@@ -176,10 +176,10 @@ describe("Notification endpoints", () => {
 
   it("only lets the owner mark their notification as read, and unread-count reflects it", async () => {
     const { accessToken: employerToken, userId: employerId } = await registerAndLogin(
-      "notif-read-employer@nexora.dev",
+      "notif-read-employer@dentsocia.dev",
       "dernek",
     );
-    const { accessToken: applicantToken } = await registerAndLogin("notif-read-applicant@nexora.dev", "asistan");
+    const { accessToken: applicantToken } = await registerAndLogin("notif-read-applicant@dentsocia.dev", "asistan");
     const jobId = await createJob(employerToken, employerId);
 
     await request(app)
