@@ -58,3 +58,9 @@ export const jobsQuerySchema = z.object({
   cursor: z.string().datetime().optional(),
   limit: z.coerce.number().int().min(1).max(50).default(20),
 });
+
+export const markJobFilledSchema = z
+  .object({
+    applicationId: z.string().min(1),
+  })
+  .strict();

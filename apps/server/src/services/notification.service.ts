@@ -251,6 +251,18 @@ export async function notifyAffiliationRejected(userId: string, orgName: string)
   await createNotification(userId, "affiliation_rejected", title, body);
 }
 
+export async function notifyJobExpiryReminder(employerId: string, jobTitle: string) {
+  const title = "İlanınız yakında kapanacak";
+  const body = `"${jobTitle}" ilanınız birkaç gün içinde otomatik kapanacak, tek tıkla uzatabilirsiniz`;
+  await createNotification(employerId, "job_expiry_reminder", title, body);
+}
+
+export async function notifyPostHireVerificationDue(candidateId: string, jobTitle: string) {
+  const title = "İlanda belirtilen şartlar gerçekleşti mi?";
+  const body = `"${jobTitle}" ilanı üzerinden işe girmiştiniz, kısa bir doğrulama sorumuzu yanıtlar mısınız?`;
+  await createNotification(candidateId, "post_hire_verification_due", title, body);
+}
+
 export async function notifySavedSearchMatch(userId: string, jobTitle: string) {
   const title = "Kayıtlı aramanla eşleşen yeni ilan";
   const body = `"${jobTitle}" ilanı, kaydettiğin arama kriterleriyle eşleşiyor`;

@@ -3,10 +3,12 @@ import { env } from "./config/env";
 import { connectDB } from "./config/db";
 import { logger } from "./utils/logger";
 import { initSockets } from "./sockets";
+import { startScheduledTasks } from "./scheduledTasks";
 import app from "./app";
 
 async function bootstrap() {
   await connectDB();
+  startScheduledTasks();
 
   const httpServer = createServer(app);
   initSockets(httpServer);

@@ -314,6 +314,18 @@ export function OrgProfileModal({ visible, orgUserId, onClose }: OrgProfileModal
                       ? `⭐ ${profile.rating.average} (${profile.rating.count} değerlendirme)`
                       : "Henüz değerlendirme yok"}
                   </Text>
+                  {profile.postHireVerificationStats.yesCount + profile.postHireVerificationStats.noCount > 0 ? (
+                    <Text style={[styles.ratingSummary, { color: colors.textSecondary }]}>
+                      Güven Göstergesi: %
+                      {Math.round(
+                        (profile.postHireVerificationStats.yesCount /
+                          (profile.postHireVerificationStats.yesCount + profile.postHireVerificationStats.noCount)) *
+                          100,
+                      )}{" "}
+                      şart uyumu (
+                      {profile.postHireVerificationStats.yesCount + profile.postHireVerificationStats.noCount} yanıt)
+                    </Text>
+                  ) : null}
                 </View>
               </View>
 

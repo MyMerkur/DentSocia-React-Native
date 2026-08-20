@@ -3,7 +3,7 @@ import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } fr
 import { Briefcase } from "lucide-react-native";
 import { getApiErrorMessage } from "@dentsocia/api-client";
 import { radii, spacing, typography } from "@dentsocia/ui-tokens";
-import { getMyJobs, updateJobStatus, type JobItem } from "../../../services/jobApi";
+import { getMyJobs, updateJobStatus, extendJob, type JobItem } from "../../../services/jobApi";
 import { CreateJobModal } from "./CreateJobModal";
 import { ApplicantsModal } from "./ApplicantsModal";
 import { CandidateSwipeModal } from "../../matching/components/CandidateSwipeModal";
@@ -13,6 +13,12 @@ import { Badge } from "../../../components/Badge";
 import { Button } from "../../../components/Button";
 import { EmptyState } from "../../../components/EmptyState";
 import { SkeletonRow } from "../../../components/Skeleton";
+
+const EXPIRY_WARNING_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
+
+function daysUntil(dateIso: string): number {
+  return Math.max(0, Math.ceil((new Date(dateIso).getTime() - Date.now()) / (24 * 60 * 60 * 1000)));
+}
 
 export function MyPostingsTab() {
   const { colors } = useTheme();
@@ -59,6 +65,18 @@ export function MyPostingsTab() {
     }
   }
 
+  async function handleExtend(job: JobItem) {
+    setTogglingId(job.id);
+    try {
+      const updated = await extendJob(job.id);
+      setJobs((current) => current.map((item) => (item.id === job.id ? updated : item)));
+    } catch (err) {
+      setError(getApiErrorMessage(err, "İlan uzatılamadı"));
+    } finally {
+      setTogglingId(null);
+    }
+  }
+
   if (loading) {
     return (
       <View style={styles.skeletonList}>
@@ -95,6 +113,11 @@ export function MyPostingsTab() {
               {item.location ? (
                 <Text style={[styles.location, { color: colors.textSecondary }]}>{item.location}</Text>
               ) : null}
+              {item.status === "open" && item.expiresAt && new Date(item.expiresAt).getTime() - Date.now() <= EXPIRY_WARNING_WINDOW_MS ? (
+                <Text style={[styles.expiryWarning, { color: colors.warning }]}>
+                  {daysUntil(item.expiresAt)} gün içinde otomatik kapanacak
+                </Text>
+              ) : null}
               <View style={styles.actionRow}>
                 <TouchableOpacity
                   style={[styles.toggleButton, { borderColor: colors.accentGold }]}
@@ -111,6 +134,15 @@ export function MyPostingsTab() {
                 >
                   <Text style={[styles.toggleButtonText, { color: colors.accentGold }]}>Aday Bul</Text>
                 </TouchableOpacity>
+                {item.status === "open" ? (
+                  <TouchableOpacity
+                    style={[styles.toggleButton, { borderColor: colors.accentGold }]}
+                    onPress={() => handleExtend(item)}
+                    disabled={togglingId === item.id}
+                  >
+                    <Text style={[styles.toggleButtonText, { color: colors.accentGold }]}>Uzat</Text>
+                  </TouchableOpacity>
+                ) : null}
               </View>
             </Card>
           </TouchableOpacity>
@@ -168,6 +200,11 @@ const styles = StyleSheet.create({
   location: {
     fontSize: typography.sizes.sm,
     marginTop: 2,
+  },
+  expiryWarning: {
+    fontSize: typography.sizes.xs,
+    fontWeight: typography.weights.medium,
+    marginTop: spacing.xs,
   },
   actionRow: {
     flexDirection: "row",

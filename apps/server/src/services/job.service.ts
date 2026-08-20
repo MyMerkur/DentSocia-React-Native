@@ -6,16 +6,20 @@ import {
   listJobsByEmployer,
   findJobById,
   updateJobStatus,
+  extendJob as extendJobRecord,
+  markJobFilled as markJobFilledRecord,
 } from "../repositories/job.repository";
+import { findApplicationById } from "../repositories/application.repository";
 import {
   findUserById,
   consumeFreeJobPostSlotIfAvailable,
   decrementJobCreditsBalanceIfSufficient,
 } from "../repositories/user.repository";
 import { hasActiveSubscription } from "./subscription.service";
+import { scheduleVerification } from "./postHireVerification.service";
 import { notifyMatchingSavedSearches } from "./savedSearch.service";
 import { FEATURE_FLAGS } from "@dentsocia/shared-constants";
-import { EMPLOYER_ROLES, type JobStatus } from "../models/Job";
+import { EMPLOYER_ROLES, JOB_LIFETIME_MS, type JobStatus } from "../models/Job";
 import { HttpError } from "../utils/httpError";
 import { logger } from "../utils/logger";
 import { resolveUserSummary, type UserSummary, type UserSummarySource } from "../utils/userSummary";
@@ -49,6 +53,9 @@ interface JobLike {
   clinicAmenities?: string[];
   unitCount?: number | null;
   employeeDentistCount?: number | null;
+  expiresAt?: Date | null;
+  closeReason?: string | null;
+  filledApplicationId?: Types.ObjectId | null;
 }
 
 function serializeJob(job: JobLike, employer: UserSummary) {
@@ -77,6 +84,9 @@ function serializeJob(job: JobLike, employer: UserSummary) {
     employeeDentistCount: job.employeeDentistCount ?? null,
     // Şeffaf ilan (PRD §8.2) — saklanmıyor, okuma anında maaş bilgisinden türetiliyor.
     isTransparent: job.salaryMin != null || job.salaryMax != null,
+    expiresAt: job.expiresAt ?? null,
+    closeReason: job.closeReason ?? null,
+    filledApplicationId: job.filledApplicationId ? job.filledApplicationId.toString() : null,
     employer,
     createdAt: job.createdAt,
   };
@@ -138,6 +148,7 @@ export async function createJob(userId: string, input: CreateJobBody) {
     clinicAmenities: input.clinicAmenities,
     unitCount: input.unitCount,
     employeeDentistCount: input.employeeDentistCount,
+    expiresAt: new Date(Date.now() + JOB_LIFETIME_MS),
   });
 
   try {
@@ -192,7 +203,52 @@ export async function setJobStatus(userId: string, jobId: string, status: JobSta
     throw new HttpError("Bu ilanı yönetme yetkiniz yok", 403);
   }
 
-  const updated = await updateJobStatus(jobId, status);
+  const updated = await updateJobStatus(jobId, status, status === "closed" ? "manual" : null);
+  const user = await findUserById(userId);
+  const employer = await resolveUserSummary(user!);
+  return serializeJob(updated!, employer);
+}
+
+// PRD v3 §8.3 — "Klinik hatırlatma alır, tek tıkla uzatabilir."
+export async function extendJob(userId: string, jobId: string) {
+  const job = await findJobById(jobId);
+  if (!job) {
+    throw new HttpError("İlan bulunamadı", 404);
+  }
+  if (job.employerId.toString() !== userId) {
+    throw new HttpError("Bu ilanı yönetme yetkiniz yok", 403);
+  }
+  if (job.status !== "open") {
+    throw new HttpError("Kapalı bir ilan uzatılamaz", 409);
+  }
+
+  const updated = await extendJobRecord(jobId);
+  const user = await findUserById(userId);
+  const employer = await resolveUserSummary(user!);
+  return serializeJob(updated!, employer);
+}
+
+// PRD v3 §8.3/§8.5 — "Pozisyon doldu" butonu ilanı kapatır ve doğrulama akışını tetikler.
+export async function markJobFilled(userId: string, jobId: string, applicationId: string) {
+  const job = await findJobById(jobId);
+  if (!job) {
+    throw new HttpError("İlan bulunamadı", 404);
+  }
+  if (job.employerId.toString() !== userId) {
+    throw new HttpError("Bu ilanı yönetme yetkiniz yok", 403);
+  }
+
+  const application = await findApplicationById(applicationId);
+  if (!application || application.jobId.toString() !== jobId) {
+    throw new HttpError("Başvuru bulunamadı", 404);
+  }
+  if (application.status !== "accepted") {
+    throw new HttpError("Sadece onaylanmış bir başvuru için pozisyon doldu işaretlenebilir", 400);
+  }
+
+  const updated = await markJobFilledRecord(jobId, application._id);
+  await scheduleVerification({ _id: updated!._id, employerId: updated!.employerId, title: updated!.title }, application.applicantId.toString());
+
   const user = await findUserById(userId);
   const employer = await resolveUserSummary(user!);
   return serializeJob(updated!, employer);
