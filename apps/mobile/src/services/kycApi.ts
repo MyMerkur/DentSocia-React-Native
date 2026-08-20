@@ -1,7 +1,7 @@
 import { apiClient } from "./authApi";
 
 export type KycDocumentType = "kimlik" | "diploma" | "kurumsal_belge";
-export type KycDocumentStatus = "pending" | "approved" | "rejected" | "needs_review";
+export type KycDocumentStatus = "pending" | "approved" | "rejected";
 export type KycContentType = "image/jpeg" | "image/png" | "application/pdf";
 
 export interface KycDocumentItem {

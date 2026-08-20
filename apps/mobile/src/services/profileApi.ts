@@ -33,6 +33,7 @@ export interface UserProfile {
   email: string;
   role: string;
   kycLevel: number;
+  isAdmin: boolean;
   showcase: ShowcaseProfile;
   career: CareerProfile;
 }
