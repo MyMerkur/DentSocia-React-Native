@@ -6,6 +6,21 @@ import request from "supertest";
 let mongoServer: MongoMemoryServer;
 let app: Express;
 
+// PRD v3 §8.1 required fields — createJobSchema rejects a bare {title} payload now.
+const jobDefaults = {
+  description: "Yarı zamanlı çalışacak diş hekimi arıyoruz.",
+  location: "İstanbul",
+  position: "Diş hekimi",
+  branch: "Fark etmez",
+  workType: "Tam zamanlı",
+  workDays: ["Pazartesi", "Salı"],
+  workHoursStart: "09:00",
+  workHoursEnd: "18:00",
+  paymentModel: "Sabit maaş",
+  experienceLevel: "1-3 yıl",
+  hasSgk: true,
+};
+
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   process.env.ATLAS_URI_DEV = mongoServer.getUri();
@@ -41,7 +56,7 @@ async function createJob(accessToken: string, employerId: string, title = "Diş 
   const response = await request(app)
     .post("/api/v1/jobs")
     .set("Authorization", `Bearer ${accessToken}`)
-    .send({ title });
+    .send({ title, ...jobDefaults });
   return response.body.id as string;
 }
 

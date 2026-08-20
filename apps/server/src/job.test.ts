@@ -6,6 +6,21 @@ import request from "supertest";
 let mongoServer: MongoMemoryServer;
 let app: Express;
 
+// PRD v3 §8.1 required fields — createJobSchema rejects a bare {title} payload now.
+const jobDefaults = {
+  description: "Yarı zamanlı çalışacak diş hekimi arıyoruz.",
+  location: "İstanbul",
+  position: "Diş hekimi",
+  branch: "Fark etmez",
+  workType: "Tam zamanlı",
+  workDays: ["Pazartesi", "Salı"],
+  workHoursStart: "09:00",
+  workHoursEnd: "18:00",
+  paymentModel: "Sabit maaş",
+  experienceLevel: "1-3 yıl",
+  hasSgk: true,
+};
+
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   process.env.ATLAS_URI_DEV = mongoServer.getUri();
@@ -49,7 +64,7 @@ describe("Job endpoints", () => {
     const response = await request(app)
       .post("/api/v1/jobs")
       .set("Authorization", `Bearer ${accessToken}`)
-      .send({ title: "Diş Hekimi aranıyor" });
+      .send({ title: "Diş Hekimi aranıyor", ...jobDefaults });
 
     expect(response.status).toBe(403);
   });
@@ -60,7 +75,7 @@ describe("Job endpoints", () => {
     const response = await request(app)
       .post("/api/v1/jobs")
       .set("Authorization", `Bearer ${accessToken}`)
-      .send({ title: "Diş Hekimi aranıyor" });
+      .send({ title: "Diş Hekimi aranıyor", ...jobDefaults });
 
     expect(response.status).toBe(403);
   });
@@ -72,7 +87,7 @@ describe("Job endpoints", () => {
     const response = await request(app)
       .post("/api/v1/jobs")
       .set("Authorization", `Bearer ${accessToken}`)
-      .send({ title: "Diş Hekimi aranıyor", location: "İstanbul", specialties: ["Ortodonti"] });
+      .send({ title: "Diş Hekimi aranıyor", ...jobDefaults, location: "İstanbul", specialties: ["Ortodonti"] });
 
     expect(response.status).toBe(201);
     expect(response.body.status).toBe("open");
@@ -86,11 +101,11 @@ describe("Job endpoints", () => {
     await request(app)
       .post("/api/v1/jobs")
       .set("Authorization", `Bearer ${accessToken}`)
-      .send({ title: "Birinci ilan" });
+      .send({ title: "Birinci ilan", ...jobDefaults });
     const secondResponse = await request(app)
       .post("/api/v1/jobs")
       .set("Authorization", `Bearer ${accessToken}`)
-      .send({ title: "İkinci ilan" });
+      .send({ title: "İkinci ilan", ...jobDefaults });
 
     await request(app)
       .patch(`/api/v1/jobs/${secondResponse.body.id}/status`)
@@ -112,7 +127,7 @@ describe("Job endpoints", () => {
     const created = await request(app)
       .post("/api/v1/jobs")
       .set("Authorization", `Bearer ${ownerToken}`)
-      .send({ title: "Asistan aranıyor" });
+      .send({ title: "Asistan aranıyor", ...jobDefaults });
 
     const response = await request(app)
       .patch(`/api/v1/jobs/${created.body.id}/status`)
@@ -126,7 +141,10 @@ describe("Job endpoints", () => {
     const { accessToken, userId } = await registerAndLogin("job-mine@dentsocia.dev", "klinik");
     await verifyOrgKyc(userId);
 
-    await request(app).post("/api/v1/jobs").set("Authorization", `Bearer ${accessToken}`).send({ title: "İlan A" });
+    await request(app)
+      .post("/api/v1/jobs")
+      .set("Authorization", `Bearer ${accessToken}`)
+      .send({ title: "İlan A", ...jobDefaults });
 
     const response = await request(app).get("/api/v1/jobs/mine").set("Authorization", `Bearer ${accessToken}`);
 
@@ -142,14 +160,14 @@ describe("Job endpoints", () => {
       const response = await request(app)
         .post("/api/v1/jobs")
         .set("Authorization", `Bearer ${accessToken}`)
-        .send({ title: `Ücretsiz ilan ${i + 1}` });
+        .send({ title: `Ücretsiz ilan ${i + 1}`, ...jobDefaults });
       expect(response.status).toBe(201);
     }
 
     const fourthWithoutCredit = await request(app)
       .post("/api/v1/jobs")
       .set("Authorization", `Bearer ${accessToken}`)
-      .send({ title: "Kredisiz 4. ilan" });
+      .send({ title: "Kredisiz 4. ilan", ...jobDefaults });
     expect(fourthWithoutCredit.status).toBe(402);
 
     const { UserModel } = await import("./models/User");
@@ -158,7 +176,7 @@ describe("Job endpoints", () => {
     const fourthWithCredit = await request(app)
       .post("/api/v1/jobs")
       .set("Authorization", `Bearer ${accessToken}`)
-      .send({ title: "Kredili 4. ilan" });
+      .send({ title: "Kredili 4. ilan", ...jobDefaults });
     expect(fourthWithCredit.status).toBe(201);
 
     const afterCredit = await UserModel.findById(userId);
@@ -167,7 +185,7 @@ describe("Job endpoints", () => {
     const fifthWithoutCredit = await request(app)
       .post("/api/v1/jobs")
       .set("Authorization", `Bearer ${accessToken}`)
-      .send({ title: "Kredisiz 5. ilan" });
+      .send({ title: "Kredisiz 5. ilan", ...jobDefaults });
     expect(fifthWithoutCredit.status).toBe(402);
   });
 
@@ -184,7 +202,7 @@ describe("Job endpoints", () => {
         request(app)
           .post("/api/v1/jobs")
           .set("Authorization", `Bearer ${accessToken}`)
-          .send({ title: `Yarış ilanı ${i + 1}` }),
+          .send({ title: `Yarış ilanı ${i + 1}`, ...jobDefaults }),
       ),
     );
 
@@ -210,7 +228,7 @@ describe("Job endpoints", () => {
       await request(app)
         .post("/api/v1/jobs")
         .set("Authorization", `Bearer ${accessToken}`)
-        .send({ title: `Ücretsiz ilan ${i + 1}` });
+        .send({ title: `Ücretsiz ilan ${i + 1}`, ...jobDefaults });
     }
 
     const { SubscriptionModel } = await import("./models/Subscription");
@@ -219,7 +237,7 @@ describe("Job endpoints", () => {
     const fourth = await request(app)
       .post("/api/v1/jobs")
       .set("Authorization", `Bearer ${accessToken}`)
-      .send({ title: "Premium 4. ilan" });
+      .send({ title: "Premium 4. ilan", ...jobDefaults });
     expect(fourth.status).toBe(201);
   });
 });

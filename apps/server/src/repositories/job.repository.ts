@@ -7,6 +7,22 @@ interface CreateJobInput {
   description: string;
   location: string;
   specialties: string[];
+  position?: string;
+  branch?: string;
+  workType?: string;
+  workDays?: string[];
+  workHoursStart?: string;
+  workHoursEnd?: string;
+  paymentModel?: string;
+  experienceLevel?: string;
+  hasSgk?: boolean;
+  salaryMin?: number;
+  salaryMax?: number;
+  salaryType?: string;
+  premiumPercentage?: number;
+  clinicAmenities?: string[];
+  unitCount?: number;
+  employeeDentistCount?: number;
 }
 
 export async function createJob(data: CreateJobInput) {

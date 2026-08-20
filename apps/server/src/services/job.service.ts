@@ -31,6 +31,22 @@ interface JobLike {
   specialties: string[];
   status: JobStatus;
   createdAt: Date;
+  position?: string | null;
+  branch?: string | null;
+  workType?: string | null;
+  workDays?: string[];
+  workHoursStart?: string;
+  workHoursEnd?: string;
+  paymentModel?: string | null;
+  experienceLevel?: string | null;
+  hasSgk?: boolean | null;
+  salaryMin?: number | null;
+  salaryMax?: number | null;
+  salaryType?: string | null;
+  premiumPercentage?: number | null;
+  clinicAmenities?: string[];
+  unitCount?: number | null;
+  employeeDentistCount?: number | null;
 }
 
 function serializeJob(job: JobLike, employer: UserSummary) {
@@ -41,6 +57,24 @@ function serializeJob(job: JobLike, employer: UserSummary) {
     location: job.location,
     specialties: job.specialties,
     status: job.status,
+    position: job.position ?? null,
+    branch: job.branch ?? null,
+    workType: job.workType ?? null,
+    workDays: job.workDays ?? [],
+    workHoursStart: job.workHoursStart ?? "",
+    workHoursEnd: job.workHoursEnd ?? "",
+    paymentModel: job.paymentModel ?? null,
+    experienceLevel: job.experienceLevel ?? null,
+    hasSgk: job.hasSgk ?? null,
+    salaryMin: job.salaryMin ?? null,
+    salaryMax: job.salaryMax ?? null,
+    salaryType: job.salaryType ?? null,
+    premiumPercentage: job.premiumPercentage ?? null,
+    clinicAmenities: job.clinicAmenities ?? [],
+    unitCount: job.unitCount ?? null,
+    employeeDentistCount: job.employeeDentistCount ?? null,
+    // Şeffaf ilan (PRD §8.2) — saklanmıyor, okuma anında maaş bilgisinden türetiliyor.
+    isTransparent: job.salaryMin != null || job.salaryMax != null,
     employer,
     createdAt: job.createdAt,
   };
@@ -83,9 +117,25 @@ export async function createJob(userId: string, input: CreateJobBody) {
   const created = await createJobRecord({
     employerId: new Types.ObjectId(userId),
     title: input.title,
-    description: input.description ?? "",
-    location: input.location ?? "",
+    description: input.description,
+    location: input.location,
     specialties: input.specialties ?? [],
+    position: input.position,
+    branch: input.branch,
+    workType: input.workType,
+    workDays: input.workDays,
+    workHoursStart: input.workHoursStart,
+    workHoursEnd: input.workHoursEnd,
+    paymentModel: input.paymentModel,
+    experienceLevel: input.experienceLevel,
+    hasSgk: input.hasSgk,
+    salaryMin: input.salaryMin,
+    salaryMax: input.salaryMax,
+    salaryType: input.salaryType,
+    premiumPercentage: input.premiumPercentage,
+    clinicAmenities: input.clinicAmenities,
+    unitCount: input.unitCount,
+    employeeDentistCount: input.employeeDentistCount,
   });
 
   const employer = await resolveUserSummary(user);
