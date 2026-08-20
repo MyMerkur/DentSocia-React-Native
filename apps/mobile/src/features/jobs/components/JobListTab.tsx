@@ -124,13 +124,22 @@ export function JobListTab() {
                   {item.description}
                 </Text>
               ) : null}
-              {item.specialties.length > 0 ? (
-                <View style={styles.tagRow}>
-                  {item.specialties.map((tag) => (
-                    <Badge key={tag} label={tag} variant="neutral" />
-                  ))}
-                </View>
-              ) : null}
+              <View style={styles.tagRow}>
+                {item.isTransparent ? (
+                  <Badge
+                    label={item.salaryMin && item.salaryMax ? `${item.salaryMin}–${item.salaryMax} ${item.salaryType ?? ""}` : "Şeffaf ilan"}
+                    variant="gold"
+                  />
+                ) : (
+                  <Text style={[styles.unspecifiedSalary, { color: colors.textTertiary }]}>Maaş belirtilmemiş</Text>
+                )}
+                {item.branch ? <Badge label={item.branch} variant="neutral" /> : null}
+                {item.workType ? <Badge label={item.workType} variant="neutral" /> : null}
+                {item.hasSgk ? <Badge label="SGK var" variant="success" /> : null}
+                {item.specialties.map((tag) => (
+                  <Badge key={tag} label={tag} variant="neutral" />
+                ))}
+              </View>
               <Button
                 label={alreadyApplied ? "Başvuruldu" : "Başvur"}
                 onPress={() => setApplyTarget(item)}
@@ -190,8 +199,12 @@ const styles = StyleSheet.create({
   tagRow: {
     flexDirection: "row",
     flexWrap: "wrap",
+    alignItems: "center",
     gap: spacing.xs,
     marginTop: spacing.sm,
+  },
+  unspecifiedSalary: {
+    ...typographyPresets.meta,
   },
   applyButton: {
     marginTop: spacing.md,

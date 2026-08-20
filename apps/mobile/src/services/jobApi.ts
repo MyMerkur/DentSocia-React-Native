@@ -1,4 +1,14 @@
-import type { MicroCompetencyTag } from "@dentsocia/shared-constants";
+import type {
+  MicroCompetencyTag,
+  JobPosition,
+  JobBranch,
+  JobWorkType,
+  JobWeekday,
+  JobPaymentModel,
+  JobExperienceLevel,
+  JobSalaryType,
+  JobClinicAmenity,
+} from "@dentsocia/shared-constants";
 import { apiClient } from "./authApi";
 
 export type JobStatus = "open" | "closed";
@@ -17,6 +27,23 @@ export interface JobItem {
   location: string;
   specialties: MicroCompetencyTag[];
   status: JobStatus;
+  position: JobPosition | null;
+  branch: JobBranch | null;
+  workType: JobWorkType | null;
+  workDays: JobWeekday[];
+  workHoursStart: string;
+  workHoursEnd: string;
+  paymentModel: JobPaymentModel | null;
+  experienceLevel: JobExperienceLevel | null;
+  hasSgk: boolean | null;
+  salaryMin: number | null;
+  salaryMax: number | null;
+  salaryType: JobSalaryType | null;
+  premiumPercentage: number | null;
+  clinicAmenities: JobClinicAmenity[];
+  unitCount: number | null;
+  employeeDentistCount: number | null;
+  isTransparent: boolean;
   employer: JobEmployer;
   createdAt: string;
 }
@@ -28,9 +55,25 @@ export interface JobsPage {
 
 export interface CreateJobInput {
   title: string;
-  description?: string;
-  location?: string;
+  description: string;
+  location: string;
   specialties?: MicroCompetencyTag[];
+  position: JobPosition;
+  branch: JobBranch;
+  workType: JobWorkType;
+  workDays: JobWeekday[];
+  workHoursStart: string;
+  workHoursEnd: string;
+  paymentModel: JobPaymentModel;
+  experienceLevel: JobExperienceLevel;
+  hasSgk: boolean;
+  salaryMin?: number;
+  salaryMax?: number;
+  salaryType?: JobSalaryType;
+  premiumPercentage?: number;
+  clinicAmenities?: JobClinicAmenity[];
+  unitCount?: number;
+  employeeDentistCount?: number;
 }
 
 export interface MyApplicationItem {

@@ -1,4 +1,5 @@
 export * from "./featureFlags";
+export * from "./jobFields";
 
 export const MICRO_COMPETENCY_TAGS = [
   "Endodonti",
