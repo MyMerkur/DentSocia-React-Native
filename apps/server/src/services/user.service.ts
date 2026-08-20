@@ -4,6 +4,7 @@ import { revokeAllForUser } from "../repositories/refreshToken.repository";
 import { buildAvatarStorageKey, createDownloadUrl, createUploadUrl, deleteObject } from "../config/storage";
 import { hasActiveSubscription, cancelSubscription } from "./subscription.service";
 import { HttpError } from "../utils/httpError";
+import { env } from "../config/env";
 import { logger } from "../utils/logger";
 import { EMPLOYER_ROLES } from "@dentsocia/shared-constants";
 import type { updateCareerSchema, updateShowcaseSchema } from "../validators/user.validator";
@@ -33,6 +34,7 @@ export async function getMe(userId: string) {
     email: user.email,
     role: user.role,
     kycLevel: user.kycLevel,
+    isAdmin: env.ADMIN_EMAILS.includes(user.email),
     showcase: {
       displayName: user.showcase.displayName,
       title: user.showcase.title,

@@ -61,9 +61,9 @@ export async function registerDeviceToken(userId: string, token: string, platfor
 export async function notifyKycStatusChange(userId: string, documentType: string, status: string) {
   const label = documentType === "kimlik" ? "Kimlik" : "Diploma";
   const statusText: Record<string, string> = {
+    pending: "inceleme kuyruğuna alındı",
     approved: "onaylandı",
     rejected: "reddedildi",
-    needs_review: "manuel incelemeye alındı",
   };
   const title = `${label} belgeniz ${statusText[status] ?? status}`;
   await createNotification(userId, "kyc_status", title, title);

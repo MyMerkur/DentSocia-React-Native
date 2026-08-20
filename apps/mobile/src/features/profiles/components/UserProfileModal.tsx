@@ -8,6 +8,7 @@ import { Avatar } from "../../../components/Avatar";
 import { Input } from "../../../components/Input";
 import { Button } from "../../../components/Button";
 import { Skeleton } from "../../../components/Skeleton";
+import { ReportModal } from "../../../components/ReportModal";
 import { getPublicProfile, type PublicProfile } from "../../../services/publicProfileApi";
 import { requestReference, writeReference } from "../../../services/referenceApi";
 import { useAuthStore } from "../../../store/useAuthStore";
@@ -33,6 +34,7 @@ export function UserProfileModal({ visible, userId, onClose }: UserProfileModalP
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [messageVisible, setMessageVisible] = useState(false);
+  const [reportVisible, setReportVisible] = useState(false);
   const [writeFormVisible, setWriteFormVisible] = useState(false);
   const [relationship, setRelationship] = useState("");
   const [body, setBody] = useState("");
@@ -131,6 +133,7 @@ export function UserProfileModal({ visible, userId, onClose }: UserProfileModalP
               {!isSelf ? (
                 <View style={styles.actionRow}>
                   <Button label="Mesaj Gönder" variant="secondary" size="sm" onPress={() => setMessageVisible(true)} />
+                  <Button label="Şikâyet Et" variant="secondary" size="sm" onPress={() => setReportVisible(true)} />
                   <Button
                     label="Referans İste"
                     variant="secondary"
@@ -191,6 +194,9 @@ export function UserProfileModal({ visible, userId, onClose }: UserProfileModalP
       </ModalShell>
 
       <InboxModal visible={messageVisible} onClose={() => setMessageVisible(false)} startTarget={userId ? { userId } : null} />
+      {userId ? (
+        <ReportModal visible={reportVisible} onClose={() => setReportVisible(false)} targetType="user" targetId={userId} />
+      ) : null}
     </>
   );
 }

@@ -14,3 +14,10 @@ export const confirmUploadSchema = z.object({
   contentType: supportedContentTypes,
   claimedFullName: z.string().min(2).max(120),
 });
+
+export const reviewDocumentSchema = z
+  .object({
+    decision: z.enum(["approved", "rejected"]),
+    note: z.string().max(500).optional(),
+  })
+  .strict();

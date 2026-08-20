@@ -34,17 +34,15 @@ const DOCUMENT_LABELS: Record<KycDocumentType, string> = {
 };
 
 const STATUS_LABELS: Record<KycDocumentItem["status"], string> = {
-  pending: "İnceleniyor",
+  pending: "İnceleme Kuyruğunda",
   approved: "Onaylandı",
   rejected: "Reddedildi",
-  needs_review: "Manuel İnceleme Bekliyor",
 };
 
 const STATUS_VARIANTS: Record<KycDocumentItem["status"], BadgeVariant> = {
-  pending: "neutral",
+  pending: "warning",
   approved: "success",
   rejected: "danger",
-  needs_review: "warning",
 };
 
 export function KycModal({ visible, onClose }: KycModalProps) {

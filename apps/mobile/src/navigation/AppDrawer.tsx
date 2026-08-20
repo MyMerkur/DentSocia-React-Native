@@ -16,6 +16,7 @@ import {
   LogOut,
   Palette,
   ShieldCheck,
+  ShieldAlert,
   Trash2,
 } from "lucide-react-native";
 import { EMPLOYER_ROLES } from "@dentsocia/shared-constants";
@@ -32,6 +33,7 @@ import { EventsModal } from "../features/events/components/EventsModal";
 import { BusinessModal } from "../features/business/components/BusinessModal";
 import { MatchesModal } from "../features/matching/components/MatchesModal";
 import { KycModal } from "../features/kyc/components/KycModal";
+import { AdminModal } from "../features/admin/components/AdminModal";
 
 const Drawer = createDrawerNavigator();
 
@@ -63,6 +65,9 @@ function DesignPreviewIcon({ size, color }: DrawerIconProps) {
 }
 function LogoutIcon({ size, color }: DrawerIconProps) {
   return <LogOut size={size} color={color} strokeWidth={iconStrokeWidth} />;
+}
+function AdminIcon({ size, color }: DrawerIconProps) {
+  return <ShieldAlert size={size} color={color} strokeWidth={iconStrokeWidth} />;
 }
 function DeleteAccountIcon({ size, color }: DrawerIconProps) {
   return <Trash2 size={size} color={color} strokeWidth={iconStrokeWidth} />;
@@ -103,6 +108,7 @@ function DrawerContent(props: DrawerContentComponentProps) {
   const [businessVisible, setBusinessVisible] = useState(false);
   const [matchesVisible, setMatchesVisible] = useState(false);
   const [kycVisible, setKycVisible] = useState(false);
+  const [adminVisible, setAdminVisible] = useState(false);
 
   useEffect(() => {
     getMe()
@@ -169,6 +175,16 @@ function DrawerContent(props: DrawerContentComponentProps) {
         />
       ) : null}
 
+      {profile?.isAdmin ? (
+        <DrawerItem
+          label="Yönetici Paneli"
+          icon={AdminIcon}
+          activeTintColor={colors.accentGold}
+          inactiveTintColor={colors.textPrimary}
+          onPress={() => closeThenOpen(() => setAdminVisible(true))}
+        />
+      ) : null}
+
       {__DEV__ ? (
         <DrawerItem
           label="Tasarım Önizleme"
@@ -219,6 +235,7 @@ function DrawerContent(props: DrawerContentComponentProps) {
         </>
       ) : null}
       <KycModal visible={kycVisible} onClose={() => setKycVisible(false)} />
+      <AdminModal visible={adminVisible} onClose={() => setAdminVisible(false)} />
     </DrawerContentScrollView>
   );
 }
