@@ -4,26 +4,35 @@ import { FileText } from "lucide-react-native";
 import { getApiErrorMessage } from "@dentsocia/api-client";
 import { spacing, typography } from "@dentsocia/ui-tokens";
 import { getMyApplications, type MyApplicationItem } from "../../../services/jobApi";
+import {
+  getMyPendingVerifications,
+  answerVerification,
+  type PostHireVerificationItem,
+} from "../../../services/postHireVerificationApi";
 import { statusLabel, statusBadgeVariant } from "../statusStyles";
 import { InboxModal } from "../../inbox/components/InboxModal";
 import { useTheme } from "../../../store/useThemeStore";
 import { Card } from "../../../components/Card";
 import { Badge } from "../../../components/Badge";
+import { Button } from "../../../components/Button";
 import { EmptyState } from "../../../components/EmptyState";
 import { SkeletonRow } from "../../../components/Skeleton";
 
 export function MyApplicationsTab() {
   const { colors } = useTheme();
   const [applications, setApplications] = useState<MyApplicationItem[]>([]);
+  const [verifications, setVerifications] = useState<PostHireVerificationItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [messageTarget, setMessageTarget] = useState<{ employerId: string; jobId: string } | null>(null);
+  const [answeringId, setAnsweringId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
-      const items = await getMyApplications();
+      const [items, pending] = await Promise.all([getMyApplications(), getMyPendingVerifications()]);
       setApplications(items);
+      setVerifications(pending);
       setError(null);
     } catch (err) {
       setError(getApiErrorMessage(err, "Başvurular yüklenemedi"));
@@ -39,6 +48,18 @@ export function MyApplicationsTab() {
     setRefreshing(true);
     await load();
     setRefreshing(false);
+  }
+
+  async function handleAnswer(id: string, answer: boolean) {
+    setAnsweringId(id);
+    try {
+      await answerVerification(id, answer);
+      setVerifications((current) => current.filter((item) => item.id !== id));
+    } catch {
+      // sessizce yut — kullanıcı listeyi yenileyerek tekrar deneyebilir
+    } finally {
+      setAnsweringId(null);
+    }
   }
 
   if (loading) {
@@ -57,6 +78,34 @@ export function MyApplicationsTab() {
         data={applications}
         keyExtractor={(item) => item.id}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor={colors.accentGold} />}
+        ListHeaderComponent={
+          verifications.length > 0 ? (
+            <View>
+              {verifications.map((verification) => (
+                <Card key={verification.id} style={styles.verificationCard}>
+                  <Text style={[styles.title, { color: colors.textPrimary }]}>
+                    "{verification.jobTitle}" ilanında belirtilen şartlar gerçekleşti mi?
+                  </Text>
+                  <View style={styles.verificationButtonRow}>
+                    <Button
+                      label="Evet"
+                      onPress={() => handleAnswer(verification.id, true)}
+                      loading={answeringId === verification.id}
+                      style={styles.verificationButton}
+                    />
+                    <Button
+                      label="Hayır"
+                      variant="secondary"
+                      onPress={() => handleAnswer(verification.id, false)}
+                      loading={answeringId === verification.id}
+                      style={styles.verificationButton}
+                    />
+                  </View>
+                </Card>
+              ))}
+            </View>
+          ) : null
+        }
         ListEmptyComponent={
           <View style={styles.centered}>
             {error ? (
@@ -114,6 +163,18 @@ const styles = StyleSheet.create({
     margin: spacing.md,
     marginBottom: 0,
     gap: spacing.sm,
+  },
+  verificationCard: {
+    margin: spacing.md,
+    marginBottom: 0,
+    gap: spacing.sm,
+  },
+  verificationButtonRow: {
+    flexDirection: "row",
+    gap: spacing.sm,
+  },
+  verificationButton: {
+    flex: 1,
   },
   title: {
     fontSize: typography.sizes.md,

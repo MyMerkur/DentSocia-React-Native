@@ -44,6 +44,9 @@ export interface JobItem {
   unitCount: number | null;
   employeeDentistCount: number | null;
   isTransparent: boolean;
+  expiresAt: string | null;
+  closeReason: "manual" | "expired" | "filled" | null;
+  filledApplicationId: string | null;
   employer: JobEmployer;
   createdAt: string;
 }
@@ -109,6 +112,16 @@ export async function getMyJobs(): Promise<JobItem[]> {
 
 export async function updateJobStatus(jobId: string, status: JobStatus): Promise<JobItem> {
   const { data } = await apiClient.patch<JobItem>(`/api/v1/jobs/${jobId}/status`, { status });
+  return data;
+}
+
+export async function extendJob(jobId: string): Promise<JobItem> {
+  const { data } = await apiClient.post<JobItem>(`/api/v1/jobs/${jobId}/extend`);
+  return data;
+}
+
+export async function markJobFilled(jobId: string, applicationId: string): Promise<JobItem> {
+  const { data } = await apiClient.post<JobItem>(`/api/v1/jobs/${jobId}/mark-filled`, { applicationId });
   return data;
 }
 
