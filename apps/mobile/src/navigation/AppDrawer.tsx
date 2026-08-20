@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   createDrawerNavigator,
@@ -7,11 +7,23 @@ import {
   DrawerItem,
   type DrawerContentComponentProps,
 } from "@react-navigation/drawer";
-import { CreditCard, GraduationCap, Ticket, Briefcase, Target, LogOut, Palette, ShieldCheck } from "lucide-react-native";
+import {
+  CreditCard,
+  GraduationCap,
+  Ticket,
+  Briefcase,
+  Target,
+  LogOut,
+  Palette,
+  ShieldCheck,
+  Trash2,
+} from "lucide-react-native";
 import { EMPLOYER_ROLES } from "@dentsocia/shared-constants";
+import { getApiErrorMessage } from "@dentsocia/api-client";
 import { fontFamilies, iconSizes, iconStrokeWidth, spacing } from "@dentsocia/ui-tokens";
 import { useTheme } from "../store/useThemeStore";
-import { getMe, type UserProfile } from "../services/profileApi";
+import { useAuthStore } from "../store/useAuthStore";
+import { getMe, deleteAccount, type UserProfile } from "../services/profileApi";
 import { logout } from "../services/authApi";
 import { MainTabNavigator } from "./MainTabNavigator";
 import { SubscriptionModal } from "../features/subscription/components/SubscriptionModal";
@@ -51,6 +63,31 @@ function DesignPreviewIcon({ size, color }: DrawerIconProps) {
 }
 function LogoutIcon({ size, color }: DrawerIconProps) {
   return <LogOut size={size} color={color} strokeWidth={iconStrokeWidth} />;
+}
+function DeleteAccountIcon({ size, color }: DrawerIconProps) {
+  return <Trash2 size={size} color={color} strokeWidth={iconStrokeWidth} />;
+}
+
+function confirmDeleteAccount() {
+  Alert.alert(
+    "Hesabını silmek istediğine emin misin?",
+    "Bu işlem geri alınamaz. Profilin, iletişim bilgilerin ve fotoğrafın kalıcı olarak silinir.",
+    [
+      { text: "Vazgeç", style: "cancel" },
+      {
+        text: "Hesabımı Sil",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await deleteAccount();
+            useAuthStore.getState().clearSession();
+          } catch (error) {
+            Alert.alert("Bir sorun oluştu", getApiErrorMessage(error, "Hesap silinemedi, lütfen tekrar deneyin"));
+          }
+        },
+      },
+    ],
+  );
 }
 
 // Everything that used to crowd ProfileScreen's header row (Aboneliğim/Kurslar/Etkinlikler/
@@ -155,6 +192,16 @@ function DrawerContent(props: DrawerContentComponentProps) {
         onPress={() => {
           props.navigation.closeDrawer();
           logout();
+        }}
+      />
+      <DrawerItem
+        label="Hesabımı Sil"
+        icon={DeleteAccountIcon}
+        activeTintColor={colors.danger}
+        inactiveTintColor={colors.danger}
+        onPress={() => {
+          props.navigation.closeDrawer();
+          confirmDeleteAccount();
         }}
       />
 

@@ -77,3 +77,12 @@ export async function listMyAffiliationRequestsHandler(req: AuthenticatedRequest
     next(error);
   }
 }
+
+export async function deleteAccountHandler(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  try {
+    await userService.deleteAccount(req.user!.id);
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+}
