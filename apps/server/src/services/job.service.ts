@@ -13,9 +13,11 @@ import {
   decrementJobCreditsBalanceIfSufficient,
 } from "../repositories/user.repository";
 import { hasActiveSubscription } from "./subscription.service";
+import { notifyMatchingSavedSearches } from "./savedSearch.service";
 import { FEATURE_FLAGS } from "@dentsocia/shared-constants";
 import { EMPLOYER_ROLES, type JobStatus } from "../models/Job";
 import { HttpError } from "../utils/httpError";
+import { logger } from "../utils/logger";
 import { resolveUserSummary, type UserSummary, type UserSummarySource } from "../utils/userSummary";
 import type { createJobSchema } from "../validators/job.validator";
 
@@ -137,6 +139,15 @@ export async function createJob(userId: string, input: CreateJobBody) {
     unitCount: input.unitCount,
     employeeDentistCount: input.employeeDentistCount,
   });
+
+  try {
+    await notifyMatchingSavedSearches(created);
+  } catch (error) {
+    logger.error("job.create.savedSearchNotify.failed", {
+      jobId: created._id.toString(),
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
 
   const employer = await resolveUserSummary(user);
   return serializeJob(created, employer);

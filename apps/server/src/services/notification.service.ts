@@ -250,3 +250,9 @@ export async function notifyAffiliationRejected(userId: string, orgName: string)
   const body = `${orgName} kurumuna aidiyet isteğiniz reddedildi`;
   await createNotification(userId, "affiliation_rejected", title, body);
 }
+
+export async function notifySavedSearchMatch(userId: string, jobTitle: string) {
+  const title = "Kayıtlı aramanla eşleşen yeni ilan";
+  const body = `"${jobTitle}" ilanı, kaydettiğin arama kriterleriyle eşleşiyor`;
+  await createNotification(userId, "saved_search_match", title, body);
+}
