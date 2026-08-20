@@ -15,6 +15,11 @@ import {
 export const JOB_STATUSES = ["open", "closed"] as const;
 export type JobStatus = (typeof JOB_STATUSES)[number];
 
+export const JOB_CLOSE_REASONS = ["manual", "expired", "filled"] as const;
+export type JobCloseReason = (typeof JOB_CLOSE_REASONS)[number];
+
+export const JOB_LIFETIME_MS = 30 * 24 * 60 * 60 * 1000;
+
 export { EMPLOYER_ROLES };
 
 // PRD v3 §8.1/§8.2 alanları. Zorunluluk yalnızca validators/job.validator.ts'te uygulanır —
@@ -43,11 +48,17 @@ const jobSchema = new Schema(
     clinicAmenities: { type: [String], enum: JOB_CLINIC_AMENITIES, default: [] },
     unitCount: { type: Number, default: null },
     employeeDentistCount: { type: Number, default: null },
+    // PRD v3 §8.3/§8.5 — ilan yaşam döngüsü + ilan sonrası doğrulama.
+    expiresAt: { type: Date, default: null },
+    closeReason: { type: String, enum: JOB_CLOSE_REASONS, default: null },
+    filledApplicationId: { type: Schema.Types.ObjectId, ref: "Application", default: null },
+    expiryReminderSentAt: { type: Date, default: null },
   },
   { timestamps: true },
 );
 
 jobSchema.index({ createdAt: -1 });
+jobSchema.index({ status: 1, expiresAt: 1 });
 
 export type Job = InferSchemaType<typeof jobSchema>;
 
