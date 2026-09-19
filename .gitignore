@@ -21,6 +21,19 @@ apps/mobile/android/.gradle/
 apps/mobile/android/build/
 *.jsbundle
 
+# Signing keys / certificates (Fastlane, Firebase, APNs — never commit real ones;
+# apps/mobile/android/app/debug.keystore is the sole intentional exception, the
+# standard public RN debug key, added explicitly with -f if ever needed again)
+*.p8
+*.p12
+*.pem
+*.jks
+*.keystore
+!apps/mobile/android/app/debug.keystore
+*.mobileprovision
+google-services.json
+GoogleService-Info.plist
+
 # Next.js (Faz 6)
 apps/web/.next/
 apps/web/out/
