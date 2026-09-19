@@ -58,13 +58,38 @@ dentsocia/
 
 ## Geliştirme ortamı
 
+### Gereksinimler
+
+- Node.js >= 22.11.0, pnpm 9 (`corepack enable` yeterli — `packageManager` alanı repoda tanımlı)
+- iOS: Xcode + CocoaPods (Bundler üzerinden, aşağıda) — sadece macOS
+- Android: Android Studio + JDK
+
+### İlk kurulum (yeni bir makinede sıfırdan)
+
 Repo kökünde:
 
 ```bash
 pnpm install
 ```
 
-Ortam değişkenleri için `.env.example` dosyasını referans alıp kendi `.env` dosyanı repo kökünde oluştur (gerçek `.env` asla commit edilmez, `.gitignore` içinde). En azından `ATLAS_URI_DEV`, `JWT_ACCESS_SECRET` ve `JWT_REFRESH_SECRET` doldurulmalı.
+Ortam değişkenleri için `.env.example` dosyasını referans alıp kendi `.env` dosyanı repo kökünde oluştur (gerçek `.env` asla commit edilmez, `.gitignore` içinde). En azından `ATLAS_URI_DEV`, `JWT_ACCESS_SECRET` ve `JWT_REFRESH_SECRET` doldurulmalı; diğerleri (R2, Anthropic, iyzico, Firebase, Instagram vb.) ilgili özellik test edilecekse doldurulur, boş bırakılırsa o entegrasyon sessizce devre dışı kalır (`XNotConfiguredError` deseni).
+
+Mobil için font dosyalarının native projeye bağlanması gerekiyor (yeni klondan sonra bir kere):
+
+```bash
+pnpm --filter @dentsocia/mobile assets:link
+```
+
+iOS için CocoaPods, Ruby/Bundler üzerinden yönetiliyor (repoda `apps/mobile/Gemfile` var):
+
+```bash
+cd apps/mobile
+bundle install
+bundle exec pod install --project-directory=ios
+cd ../..
+```
+
+### Çalıştırma
 
 Backend'i ayağa kaldırmak için:
 
@@ -75,7 +100,7 @@ pnpm --filter @dentsocia/server typecheck
 pnpm --filter @dentsocia/server lint
 ```
 
-Mobil tarafta Bare React Native kullanıldığı için Expo Go ile anlık önizleme yok — iOS için Xcode + CocoaPods, Android için Android Studio + JDK kurulu olması gerekiyor.
+Mobil tarafta Bare React Native kullanıldığı için Expo Go ile anlık önizleme yok — Metro'yu ayrı bir terminalde açık tutup (`pnpm --filter @dentsocia/mobile start`) simulator/cihaz build'ini tetikle:
 
 ```bash
 pnpm --filter @dentsocia/mobile ios       # Xcode + CocoaPods kurulu olmalı
